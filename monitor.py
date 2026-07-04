@@ -4,36 +4,6 @@ import subprocess
 # stdout 強制不緩衝，確保 daemon thread 的輸出即時可見
 sys.stdout.reconfigure(line_buffering=True)
 
-# ── 自動安裝缺少的第三方模組 ──────────────────────────────────────
-_REQUIRED_PACKAGES = {
-    "serial":         "pyserial",   # import name  →  pip package name
-    "websockets":     "websockets",
-    "prompt_toolkit": "prompt_toolkit",
-}
-
-def _ensure_packages():
-    """檢查並自動安裝尚未安裝的套件。"""
-    missing = []
-    for import_name, pip_name in _REQUIRED_PACKAGES.items():
-        try:
-            __import__(import_name)
-        except ImportError:
-            missing.append(pip_name)
-
-    if missing:
-        print(f"[自動安裝] 偵測到缺少套件：{', '.join(missing)}，正在安裝…")
-        try:
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "--quiet"] + missing
-            )
-            print(f"[自動安裝] 安裝完成：{', '.join(missing)}")
-        except subprocess.CalledProcessError as e:
-            print(f"[自動安裝] 安裝失敗，請手動執行：pip install {' '.join(missing)}")
-            print(f"           錯誤訊息：{e}")
-            sys.exit(1)
-
-_ensure_packages()
-# ─────────────────────────────────────────────────────────────────
 
 import serial
 import serial.tools.list_ports
@@ -283,9 +253,8 @@ def write_to_port(ser):
                 ser.close()
                 sys.exit(0)
             except EOFError:
-                print("\nExiting...")
-                ser.close()
-                sys.exit(0)
+                time.sleep(1)
+                continue
             except Exception as e:
                 print(f"Input error: {e}")
                 break
@@ -295,6 +264,12 @@ def main():
     serial_port = choose_serial_port()
     try:
         ser = serial.Serial(serial_port, BAUD_RATE, timeout=1)
+        import time
+        ser.setDTR(False)
+        ser.setRTS(True)
+        time.sleep(0.1)
+        ser.setRTS(False)
+        time.sleep(0.1)
         _ser_global = ser  # 讓 ws_handler 可存取 Serial port
         print(f"成功連接 {serial_port} @ {BAUD_RATE} baud.")
         

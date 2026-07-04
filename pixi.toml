@@ -1,0 +1,14 @@
+[workspace]
+channels = ["conda-forge"]
+name = "P2026"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+monitor = "python monitor.py"
+
+[dependencies]
+python = ">=3.14.6,<3.15"
+pyserial = ">=3.5,<4"
+websockets = ">=16.0,<17"
+prompt_toolkit = ">=3.0.52,<4"

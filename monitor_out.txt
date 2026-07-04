@@ -1,0 +1,820 @@
+成功連接 /dev/cu.usbserial-10 @ 115200 baud.
+WebSocket Server started at ws://localhost:8765
++ښj%ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6380
+ho 0 tail 12 room 4
+load:0x40078000,len:15916
+load:0x40080400,len:3860
+entry 0x40080630
+I (29) boot: ESP-IDF 5.5.0 2nd stage bootloader
+I (29) boot: compile time Jul  4 2026 19:29:56
+I (29) boot: Multicore bootloader
+I (31) boot: chip revision: v3.1
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (37) boot.esp32: SPI Mode       : DIO
+I (41) boot.esp32: SPI Flash Size : 4MB
+I (44) boot: Enabling RNG early entropy source...
+I (49) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+=======================================
+輸入 'T' 發送強制終止指令
+輸入 'exit' 離開程式
+=======================================
+
+I (58) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (71) boot:  2 factory          factory app      00 00 00010000 00100000
+I (77) boot: End of partition table
+Warning: Input is not a terminal (fd=0).
+指令 >
+
+
+
+
+
+
+        I (80) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=0d2a8h ( 53928) map
+指令 >
+
+
+
+
+
+
+        I (106) esp_image: segment 1: paddr=0001d2d0 vaddr=3ff80000 size=00020h (    32) load
+I (107) esp_image: segment 2: paddr=0001d2f8 vaddr=3ffb0000 size=025d4h (  9684) load
+I (114) esp_image: segment 3: paddr=0001f8d4 vaddr=40080000 size=00744h (  1860) load
+I (119) esp_image: segment 4: paddr=00020020 vaddr=400d0020 size=25304h (152324) map
+I (177) esp_image: segment 5: paddr=0004532c vaddr=40080744 size=0ea1ch ( 59932) load
+I (208) boot: Loaded app from partition at offset 0x10000
+I (208) boot: Disabling RNG early entropy source...
+[0;32mI (219) cpu_start: Multicore app[0m
+[0;32mI (227) cpu_start: Pro cpu start user code[0m
+[0;32mI (227) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (227) app_init: Application information:[0m
+[0;32mI (230) app_init: Project name:     P2026[0m
+[0;32mI (235) app_init: App version:      608e82f[0m
+[0;32mI (240) app_init: Compile time:     Jul  4 2026 19:29:44[0m
+[0;32mI (246) app_init: ELF file SHA256:  f0f9ef456...[0m
+[0;32mI (251) app_init: ESP-IDF:          5.5.0[0m
+[0;32mI (256) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (260) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (265) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (271) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (278) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (283) heap_init: At 3FFB2F98 len 0002D068 (180 KiB): DRAM[0m
+[0;32mI (290) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (296) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+指令 >
+
+
+
+
+
+
+        [0;32mI (303) heap_init: At 4008F160 len 00010EA0 (67 KiB): IRAM[0m
+[0;32mI (310) spi_flash: detected chip: generic[0m
+[0;32mI (313) spi_flash: flash io: dio[0m
+[0;33mW (317) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (328) main_task: Started on CPU0[0m
+[0;32mI (338) main_task: Calling app_main()[0m
+=== Rocket Avionics System Starting ===
+[0;32mI (348) StorageComm: StorageCommManager Initialized with RX Task[0m
+[0;32mI (448) Sensors: Scanning I2C Bus...[0m
+[0;32mI (468) Sensors: Found I2C device at 0x68[0m
+[0;32mI (468) Sensors: Found I2C device at 0x77[0m
+指令 >
+
+
+
+
+
+
+        [0;32mI (518) Sensors: ICM-20948 Initialized Successfully![0m
+[0;31mE (668) Sensors: BMP388 Init Failed: Chip ID 0x00 (err: -1)[0m
+=== All Systems Operational ===
+[0;32mI (668) main_task: Returned from app_main()[0m
+指令 >
+
+
+
+
+
+
+        [0;32mI (868) StorageComm: Simulated Serial TX Start: Sending 244 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 22 00 00 00 C8 63 04 BE 8C 53 BA BD 5C 72 1C 41 E4 AB 62 3C 28 ED 1C 3C 79 7D 0B 3B F2 D2 7D 3F 42 60 65 BB A6 9B C4 3B 0A 00 00 00 22 00 00 00 C9 DD 7F 3F 1C B1 84 BC A7 DA E2 3C C2 3C 7B 3B 01 00 00 00 22 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 22 00 00 00 0C 8F A1 B9 D1 71 4C BC 00 C0 1E BD 01 00 00 00 2C 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 2C 00 00 00 29 0B 56 BA 63 46 94 BC 00 7C 69 BD 00 00 00 00 2C 00 00 00 0F 5C EB BC 8C 53 BA BD 3A AE 1B 41 93 1B 74 3C 35 3C 51 3C 00 00 00 00 83 C0 82 3F 0A D7 23 BC 6F 12 03 3C 0A 00 00 00 2C 00 00 00 09 EF 7F 3F 83 87 34 BC B0 00 9F 3C A1 28 91 3B 01 00 00 00 36 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 36 00 00 00 BA 6B 04 BB 80 1A CC BC 00 68 7D BC
+  🔹 [IMU] 34ms: Acc=(-0.13, -0.09, 9.78) Gyro=(0.01, 0.01, 0.00) Mag=(0.99, -0.00, 0.01)
+  🚀 [QUAT] 34ms: w=0.999, x=-0.016, y=0.028, z=0.004
+  🔹 [BMP] 34ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 34ms: Alt=-0.00m, Vz=-0.01m/s, Az=-0.04m/s²
+  🔹 [BMP] 44ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 44ms: Alt=-0.00m, Vz=-0.02m/s, Az=-0.06m/s²
+  🔹 [IMU] 44ms: Acc=(-0.03, -0.09, 9.73) Gyro=(0.01, 0.01, 0.00) Mag=(1.02, -0.01, 0.01)
+  🚀 [QUAT] 44ms: w=1.000, x=-0.011, y=0.019, z=0.004
+  🔹 [BMP] 54ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 54ms: Alt=-0.00m, Vz=-0.02m/s, Az=-0.02m/s²
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (1068) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 36 00 00 00 0F 5C EB BC 09 4B 89 BD 22 4B 1C 41 79 7D 0B 3C 86 CC 3F 3C 35 3C 51 BB 62 10 80 3F 7F 6A 3C BC 0A D7 A3 3C 0A 00 00 00 36 00 00 00 27 FA 7F 3F 73 51 E3 BB 2F 79 31 3C 1A A1 6C 3B 01 00 00 00 40 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 40 00 00 00 66 70 65 BB 7D 62 EB BC 00 A6 7B BD 00 00 00 00 40 00 00 00 8B B6 A6 BD 0C 22 C4 BD D7 C1 1B 41 79 7D 8B 3C 35 3C 51 3C 79 7D 0B BB 68 91 7D 3F 31 08 2C BC 12 83 C0 3C 0A 00 00 00 40 00 00 00 D9 FD 7F 3F 25 85 9B BB EB 2C 79 3B A1 C5 AF 3B 01 00 00 00 4A 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 4A 00 00 00 96 C3 AB BB 1B 09 09 BD 00 B5 1D BD 00 00 00 00 4A 00 00 00 89 19 93 BD 10 F9 7E BD F9 85 1C 41 79 7D 8B 3C 35 3C D1 3B 79 7D 0B BB AC 1C 7A 3F 0A D7 A3 3B 6F 12 03 BA
+  🔹 [IMU] 54ms: Acc=(-0.03, -0.07, 9.77) Gyro=(0.01, 0.01, -0.00) Mag=(1.00, -0.01, 0.02)
+  🚀 [QUAT] 54ms: w=1.000, x=-0.007, y=0.011, z=0.004
+  🔹 [BMP] 64ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 64ms: Alt=-0.00m, Vz=-0.03m/s, Az=-0.06m/s²
+  🔹 [IMU] 64ms: Acc=(-0.08, -0.10, 9.73) Gyro=(0.02, 0.01, -0.00) Mag=(0.99, -0.01, 0.02)
+  🚀 [QUAT] 64ms: w=1.000, x=-0.005, y=0.004, z=0.005
+  🔹 [BMP] 74ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 74ms: Alt=-0.01m, Vz=-0.03m/s, Az=-0.04m/s²
+  🔹 [IMU] 74ms: Acc=(-0.07, -0.06, 9.78) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, 0.00, -0.00)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (1368) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 4A 00 00 00 2E FF 7F 3F 32 51 3B BB 29 66 74 3B F0 FC E5 3A 01 00 00 00 54 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 54 00 00 00 DB FF EB BB 91 5A 19 BD 00 C8 96 BB 00 00 00 00 54 00 00 00 0F 5C EB BD 8B B6 A6 BD 4B 10 1C 41 93 1B 74 3C E4 AB 62 3C 79 7D 8B 3A 31 08 7C 3F 12 83 C0 3C F4 FD 54 BC 0A 00 00 00 54 00 00 00 57 FF 7F 3F C1 6A 55 BB 97 CB 3C 3B C7 93 95 3A 01 00 00 00 5E 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 5E 00 00 00 B5 3F 18 BC A9 62 24 BD 00 89 15 BD 00 00 00 00 5E 00 00 00 10 F9 7E BD 09 4B 89 BD 5C 72 1C 41 A1 C5 82 3C 35 3C 51 3C 00 00 00 00 AC 1C 82 3F A6 9B C4 BB 39 B4 C8 BC 0A 00 00 00 5E 00 00 00 E9 FE 7F 3F AF 91 5D BB E3 3F 98 3B 05 EE 14 3A 01 00 00 00 68 00 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 74ms: w=1.000, x=-0.003, y=0.004, z=0.002
+  🔹 [BMP] 84ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 84ms: Alt=-0.01m, Vz=-0.04m/s, Az=-0.00m/s²
+  🔹 [IMU] 84ms: Acc=(-0.11, -0.08, 9.75) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, 0.02, -0.01)
+  🚀 [QUAT] 84ms: w=1.000, x=-0.003, y=0.003, z=0.001
+  🔹 [BMP] 94ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 94ms: Alt=-0.01m, Vz=-0.04m/s, Az=-0.04m/s²
+  🔹 [IMU] 94ms: Acc=(-0.06, -0.07, 9.78) Gyro=(0.02, 0.01, 0.00) Mag=(1.02, -0.01, -0.02)
+  🚀 [QUAT] 94ms: w=1.000, x=-0.003, y=0.005, z=0.001
+  🔹 [BMP] 104ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (1428) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+[0;32mI (1468) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 68 00 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0C 00 00 00 68 00 00 00 0A 92 3C BC 1B 8D 38 BD 00 34 7C BD 0A 00 00 00 68 00 00 00 23 FF 7F 3F D1 36 5B BB 04 A9 56 3B 06 FD 09 3B 00 00 00 00 68 00 00 00 0C 22 C4 BC 0F 5C 6B BD 22 4B 1C 41 50 35 94 3C 93 1B 74 3C 79 7D 0B BB 5E BA 79 3F 0A D7 A3 BC 8F C2 75 3C 01 00 00 00 72 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 72 00 00 00 B8 C3 64 BC FF 67 4A BD 00 B3 6A BD 00 00 00 00 72 00 00 00 0A E8 9C BD 0E BF 57 BD 0A E8 1C 41 28 ED 9C 3C D7 5C 2E 3C 35 3C D1 BB 62 10 80 3F 50 8D 97 3C 50 8D 97 BC
+  📝 [LOG] 104ms: [SM] Current State: 0, Time: 0.00
+  🚀 [KF_ALT] 104ms: Alt=-0.01m, Vz=-0.05m/s, Az=-0.06m/s²
+  🚀 [QUAT] 104ms: w=1.000, x=-0.003, y=0.003, z=0.002
+  🔹 [IMU] 104ms: Acc=(-0.02, -0.06, 9.77) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, -0.02, 0.01)
+  🔹 [BMP] 114ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 114ms: Alt=-0.01m, Vz=-0.05m/s, Az=-0.06m/s²
+  🔹 [IMU] 114ms: Acc=(-0.08, -0.05, 9.81) Gyro=(0.02, 0.01, -0.01) Mag=(1.00, 0.02, -0.02)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (1768) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 72 00 00 00 4C FF 7F 3F 8C 88 2B BB 27 B1 70 3B 43 78 8D 3A 01 00 00 00 7C 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 7C 00 00 00 0B 8B 87 BC 87 0D 5B BD 00 C2 7C BD 00 00 00 00 7C 00 00 00 0F 5C 6B BD 8E 8D E1 BD 55 71 1D 41 93 1B 74 3C 79 7D 0B 3C 79 7D 8B 3A B0 72 80 3F 42 60 65 3C A6 9B 44 BC 0A 00 00 00 7C 00 00 00 FA FE 7F 3F E9 50 86 BB C6 81 6E 3B 13 BB 91 BA 01 00 00 00 86 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 86 00 00 00 77 7B 9C BC 66 D7 5E BD 00 14 58 BD 00 00 00 00 86 00 00 00 10 F9 FE BD 0F 5C 6B BD AE FC 1B 41 E4 AB 62 3C 93 1B 74 3C 00 00 00 00 35 5E 82 3F 0A D7 A3 BC 9E EF A7 BC 0A 00 00 00 86 00 00 00 3C FF 7F 3F 7B 83 12 BB 8C 3E 68 3B BD 9E 1E BB 01 00 00 00 90 00 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 114ms: w=1.000, x=-0.003, y=0.004, z=0.001
+  🔹 [BMP] 124ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 124ms: Alt=-0.02m, Vz=-0.05m/s, Az=-0.06m/s²
+  🔹 [IMU] 124ms: Acc=(-0.06, -0.11, 9.84) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, 0.01, -0.01)
+  🚀 [QUAT] 124ms: w=1.000, x=-0.004, y=0.004, z=-0.001
+  🔹 [BMP] 134ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 134ms: Alt=-0.02m, Vz=-0.05m/s, Az=-0.05m/s²
+  🔹 [IMU] 134ms: Acc=(-0.12, -0.06, 9.75) Gyro=(0.01, 0.01, 0.00) Mag=(1.02, -0.02, -0.02)
+  🚀 [QUAT] 134ms: w=1.000, x=-0.002, y=0.004, z=-0.002
+  🔹 [BMP] 144ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (1968) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 90 00 00 00 54 18 B2 BC 7B E8 6F BD 00 8D 2F BD 0A 00 00 00 90 00 00 00 4C FF 7F 3F 6D 0A E7 BA 03 AB 64 3B 8B 3E 24 BB 00 00 00 00 90 00 00 00 0A E8 9C BD 0C 22 C4 BC F9 85 1C 41 93 1B 74 3C D7 5C 2E 3C 79 7D 8B BA 48 E1 7A 3F EC 51 B8 BC 0A D7 A3 BC 01 00 00 00 9A 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 9A 00 00 00 32 0E C8 BC 8B 63 7A BD 00 26 1D BD 00 00 00 00 9A 00 00 00 09 4B 89 BD 8C 53 BA BD 96 99 1C 41 A1 C5 82 3C 28 ED 1C 3C 79 7D 8B BB 1F 85 7B 3F 0A D7 23 3B 6F 12 83 3C 0A 00 00 00 9A 00 00 00 2E FF 7F 3F 45 C7 74 BB 4A 38 56 3B 47 33 2D BA 01 00 00 00 A4 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 A4 00 00 00 26 BE DD BC 40 92 82 BD 00 FA E4 BC
+  🚀 [KF_ALT] 144ms: Alt=-0.02m, Vz=-0.06m/s, Az=-0.04m/s²
+  🚀 [QUAT] 144ms: w=1.000, x=-0.002, y=0.003, z=-0.003
+  🔹 [IMU] 144ms: Acc=(-0.08, -0.02, 9.78) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, -0.02, -0.02)
+  🔹 [BMP] 154ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 154ms: Alt=-0.02m, Vz=-0.06m/s, Az=-0.04m/s²
+  🔹 [IMU] 154ms: Acc=(-0.07, -0.09, 9.79) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, 0.00, 0.02)
+  🚀 [QUAT] 154ms: w=1.000, x=-0.004, y=0.003, z=-0.001
+  🔹 [BMP] 164ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 164ms: Alt=-0.03m, Vz=-0.06m/s, Az=-0.03m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (2168) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 A4 00 00 00 C8 63 04 BE 8D F0 CD BD 96 99 1C 41 D7 5C 2E 3C D7 5C 2E 3C 79 7D 8B 3A A4 70 7D 3F 0A D7 23 3B BC 74 13 BC 0A 00 00 00 A4 00 00 00 87 FE 7F 3F 62 1A 87 BB BA FB AB 3B 81 9A 3B 3A 01 00 00 00 AE 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 AE 00 00 00 17 16 F3 BC 0C F6 83 BD 00 B7 0C 3D 00 00 00 00 AE 00 00 00 8C 53 BA BD 8E 8D E1 3D D0 C0 1C 41 35 3C 51 3C 35 3C D1 3B 79 7D 8B BA D5 78 81 3F A6 9B C4 3A A6 9B 44 3C 0A 00 00 00 AE 00 00 00 2C FE 7F 3F 87 78 31 BB 8A 38 8A 3B FB BB B5 BB 01 00 00 00 B8 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 B8 00 00 00 94 6D 03 BD 20 A4 89 BD 00 BE C0 BC 00 00 00 00 B8 00 00 00 0C 22 44 BD 0C 22 C4 BD E1 22 1D 41 93 1B 74 3C 35 3C 51 3C 79 7D 0B BB FA 7E 7A 3F 02 2B 87 BC 0A D7 23 3B
+  🔹 [IMU] 164ms: Acc=(-0.13, -0.10, 9.79) Gyro=(0.01, 0.01, 0.00) Mag=(0.99, 0.00, -0.01)
+  🚀 [QUAT] 164ms: w=1.000, x=-0.004, y=0.005, z=0.001
+  🔹 [BMP] 174ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 174ms: Alt=-0.03m, Vz=-0.06m/s, Az=0.03m/s²
+  🔹 [IMU] 174ms: Acc=(-0.09, 0.11, 9.80) Gyro=(0.01, 0.01, -0.00) Mag=(1.01, 0.00, 0.01)
+  🚀 [QUAT] 174ms: w=1.000, x=-0.003, y=0.004, z=-0.006
+  🔹 [BMP] 184ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 184ms: Alt=-0.03m, Vz=-0.07m/s, Az=-0.02m/s²
+  🔹 [IMU] 184ms: Acc=(-0.05, -0.10, 9.82) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, -0.02, 0.00)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (2468) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 B8 00 00 00 8B FF 7F 3F B5 3D 01 BB 03 30 45 3B F5 65 86 BA 01 00 00 00 C2 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 C2 00 00 00 5E 07 0D BD 4F 54 8A BD 00 FC BE BC 00 00 00 00 C2 00 00 00 0A E8 9C BD 0F 5C 6B BD F9 85 1C 41 A1 C5 82 3C E4 AB 62 3C 35 3C 51 BB A8 C6 7B 3F F4 FD 54 3C 1B 2F 5D 3C 0A 00 00 00 C2 00 00 00 20 FF 7F 3F 1F D4 24 BB 68 DD 91 3B D7 C9 69 BA 01 00 00 00 CC 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 CC 00 00 00 2E 1D 16 BD ED B6 8D BD 00 EF 06 BD 00 00 00 00 CC 00 00 00 0C 22 C4 BD 0B 85 30 BD 4B 10 1C 41 D7 5C 2E 3C E4 AB 62 3C 79 7D 8B 3A 85 EB 81 3F 7F 6A BC BC BC 74 93 3C 0A 00 00 00 CC 00 00 00 B7 FE 7F 3F 96 3E 38 BB 26 17 9F 3B 42 1B 38 BB 01 00 00 00 D6 00 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 184ms: w=1.000, x=-0.002, y=0.003, z=-0.001
+  🔹 [BMP] 194ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 194ms: Alt=-0.03m, Vz=-0.07m/s, Az=-0.02m/s²
+  🔹 [IMU] 194ms: Acc=(-0.08, -0.06, 9.78) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, 0.01, 0.01)
+  🚀 [QUAT] 194ms: w=1.000, x=-0.003, y=0.004, z=-0.001
+  🔹 [BMP] 204ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 204ms: Alt=-0.04m, Vz=-0.07m/s, Az=-0.03m/s²
+  🔹 [IMU] 204ms: Acc=(-0.10, -0.04, 9.75) Gyro=(0.01, 0.01, 0.00) Mag=(1.01, -0.02, 0.02)
+  🚀 [QUAT] 204ms: w=1.000, x=-0.003, y=0.005, z=-0.003
+  🔹 [BMP] 214ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (2528) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+指令 >
+
+
+
+
+
+
+        [0;32mI (2568) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 D6 00 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 D6 00 00 00 0F 5C 6B BD 0A E8 1C BD A7 FB 1C 41 86 CC 3F 3C 28 ED 1C 3C 79 7D 0B 3B FA 7E 7A 3F 02 2B 87 3C 0A D7 A3 BC 0C 00 00 00 D6 00 00 00 53 2D 1F BD 59 EE 91 BD 00 22 9F 3C 0A 00 00 00 D6 00 00 00 64 FF 7F 3F 9A 84 27 BB 09 52 55 3B 5A 87 A2 BA 01 00 00 00 E0 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 E0 00 00 00 63 C3 27 BD 5D 8A 95 BD 00 DC 60 BC 00 00 00 00 E0 00 00 00 0B 85 B0 BD 10 F9 7E BD E8 23 1C 41 79 7D 8B 3C 93 1B F4 3B 79 7D 0B 3B A4 70 7D 3F 1B 2F 5D 3C 6F 12 83 BA
+  📝 [LOG] 214ms: [SM] Current State: 0, Time: 0.00
+  🔹 [IMU] 214ms: Acc=(-0.06, -0.04, 9.81) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, 0.02, -0.02)
+  🚀 [KF_ALT] 214ms: Alt=-0.04m, Vz=-0.07m/s, Az=0.02m/s²
+  🚀 [QUAT] 214ms: w=1.000, x=-0.003, y=0.003, z=-0.001
+  🔹 [BMP] 224ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 224ms: Alt=-0.04m, Vz=-0.07m/s, Az=-0.01m/s²
+  🔹 [IMU] 224ms: Acc=(-0.09, -0.06, 9.76) Gyro=(0.02, 0.01, 0.00) Mag=(0.99, 0.01, -0.00)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (2868) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 E0 00 00 00 14 FF 7F 3F 5F EA 54 BB E3 22 8A 3B B1 4C 0C 39 01 00 00 00 EA 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 EA 00 00 00 28 72 30 BD BE 87 9C BD 00 18 A9 3B 00 00 00 00 EA 00 00 00 8E 8D E1 BD 0F 5C 6B BD 5C 72 1C 41 28 ED 9C 3C 86 CC 3F 3C 79 7D 0B 3B A8 C6 7B 3F 6F 12 83 3A F4 FD 54 BC 0A 00 00 00 EA 00 00 00 D2 FE 7F 3F AB 12 33 BB 5D 01 A9 3B B7 22 BC 3A 01 00 00 00 F4 00 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 F4 00 00 00 87 08 39 BD A7 59 9D BD 00 A4 9F 3C 00 00 00 00 F4 00 00 00 8C 53 BA BD 8B B6 A6 BD 22 4B 1C 41 35 3C 51 3C 28 ED 1C 3C 79 7D 8B 3A A0 1A 7F 3F EC 51 B8 3C 6F 12 03 BA 0A 00 00 00 F4 00 00 00 73 FE 7F 3F 94 26 2F BB 73 3E AB 3B 35 61 6B BB 01 00 00 00 FE 00 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 224ms: w=1.000, x=-0.003, y=0.004, z=0.000
+  🔹 [BMP] 234ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 234ms: Alt=-0.04m, Vz=-0.08m/s, Az=0.01m/s²
+  🔹 [IMU] 234ms: Acc=(-0.11, -0.06, 9.78) Gyro=(0.02, 0.01, 0.00) Mag=(0.98, 0.00, -0.01)
+  🚀 [QUAT] 234ms: w=1.000, x=-0.003, y=0.005, z=0.001
+  🔹 [BMP] 244ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 244ms: Alt=-0.05m, Vz=-0.08m/s, Az=0.02m/s²
+  🔹 [IMU] 244ms: Acc=(-0.09, -0.08, 9.77) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, 0.02, -0.00)
+  🚀 [QUAT] 244ms: w=1.000, x=-0.003, y=0.005, z=-0.004
+  🔹 [BMP] 254ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (3068) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 FE 00 00 00 BC 3A 41 BD 1A 5C A3 BD 00 20 A8 3B 0A 00 00 00 FE 00 00 00 E9 FE 7F 3F DC 26 6A BB 4B 8A 7D 3B 81 8A 1A BB 00 00 00 00 FE 00 00 00 0C 22 C4 BD 8C 53 BA BD AE FC 1B 41 35 3C 51 3C 35 3C 51 3C 79 7D 0B BB 0C 02 83 3F 42 60 65 3C 00 00 00 00 01 00 00 00 08 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 08 01 00 00 FF 7F 49 BD 1D 5E A8 BD 00 7D 07 BD 00 00 00 00 08 01 00 00 0A E8 9C 3B 09 4B 89 BD 0A E8 1C 41 A1 C5 82 3C D7 5C AE 3B 79 7D 8B BA FA 7E 82 3F E3 A5 9B 3C E3 A5 1B BC 0A 00 00 00 08 01 00 00 79 FF 7F 3F E4 26 30 BB 89 84 41 3B 80 DA 13 BA 01 00 00 00 12 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 12 01 00 00 57 76 51 BD 39 65 AC BD 00 EC 1A BD
+  🚀 [KF_ALT] 254ms: Alt=-0.05m, Vz=-0.08m/s, Az=0.01m/s²
+  🚀 [QUAT] 254ms: w=1.000, x=-0.004, y=0.004, z=-0.002
+  🔹 [IMU] 254ms: Acc=(-0.10, -0.09, 9.75) Gyro=(0.01, 0.01, -0.00) Mag=(1.02, 0.01, 0.00)
+  🔹 [BMP] 264ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 264ms: Alt=-0.05m, Vz=-0.08m/s, Az=-0.03m/s²
+  🔹 [IMU] 264ms: Acc=(0.00, -0.07, 9.81) Gyro=(0.02, 0.01, -0.00) Mag=(1.02, 0.02, -0.01)
+  🚀 [QUAT] 264ms: w=1.000, x=-0.003, y=0.003, z=-0.001
+  🔹 [BMP] 274ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 274ms: Alt=-0.05m, Vz=-0.08m/s, Az=-0.04m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (3268) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 12 01 00 00 0E BF 57 BD 8B B6 A6 BD D0 C0 1C 41 35 3C 51 3C 28 ED 1C 3C 79 7D 8B BA A0 1A 7F 3F 31 08 2C BC 29 5C 8F BC 0A 00 00 00 12 01 00 00 2F FF 7F 3F DF C2 68 BB 39 EB 5E 3B A2 AC 6A 3A 01 00 00 00 1C 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 1C 01 00 00 C5 8D 59 BD 8B 9B B0 BD 00 48 5A 3D 00 00 00 00 1C 01 00 00 10 F9 7E BD 90 2A F5 BD 96 99 1C 41 D7 5C 2E 3C 86 CC 3F 3C 79 7D 0B 3B 0C 02 7B 3F E3 A5 9B BC 6F 12 83 3C 0A 00 00 00 1C 01 00 00 C8 FD 7F 3F 00 28 69 BB D6 BB 86 3B D0 67 CA 3B 01 00 00 00 26 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 26 01 00 00 D0 E6 60 BD 65 1F B2 BD 00 4C 63 BC 00 00 00 00 26 01 00 00 8E 8D E1 BD 0F 5C 6B BC 85 37 1C 41 93 1B F4 3B 35 3C 51 3C 79 7D 8B BB 35 5E 7A 3F BC 74 93 3B A6 9B 44 BC
+  🔹 [IMU] 274ms: Acc=(-0.05, -0.08, 9.80) Gyro=(0.01, 0.01, -0.00) Mag=(1.00, -0.01, -0.02)
+  🚀 [QUAT] 274ms: w=1.000, x=-0.004, y=0.003, z=0.001
+  🔹 [BMP] 284ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 284ms: Alt=-0.05m, Vz=-0.09m/s, Az=0.05m/s²
+  🔹 [IMU] 284ms: Acc=(-0.06, -0.12, 9.79) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, -0.02, 0.02)
+  🚀 [QUAT] 284ms: w=1.000, x=-0.004, y=0.004, z=0.006
+  🔹 [BMP] 294ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 294ms: Alt=-0.05m, Vz=-0.09m/s, Az=-0.01m/s²
+  🔹 [IMU] 294ms: Acc=(-0.11, -0.01, 9.76) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, 0.00, -0.01)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (3568) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 26 01 00 00 5B FE 7F 3F 16 74 E0 BA 7E 87 7B 3B E2 64 BB 3B 01 00 00 00 30 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 30 01 00 00 67 F7 67 BD 52 03 B3 BD 00 C0 11 BC 00 00 00 00 30 01 00 00 0C 22 C4 BD 0A E8 1C BD 8F 98 1D 41 50 35 94 3C 35 3C D1 3B 79 7D 0B BB 75 93 80 3F 0A D7 23 BC 1B 2F 5D BC 0A 00 00 00 30 01 00 00 10 FF 7F 3F CA A3 31 BB D0 FC 91 3B 97 32 A4 3A 01 00 00 00 3A 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 3A 01 00 00 BD 00 6E BD 73 AA B4 BD 00 F0 41 BD 00 00 00 00 3A 01 00 00 0A E8 9C BD 0C 22 C4 BC 6D D4 1C 41 79 7D 8B 3C 79 7D 0B 3C 79 7D 8B 3A DB F9 7E 3F BC 74 93 BC 96 43 0B 3C 0A 00 00 00 3A 01 00 00 1D FF 7F 3F 66 3B 43 BB 9B F3 5C 3B B0 4A 2D 3B 01 00 00 00 44 01 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 294ms: w=1.000, x=-0.002, y=0.004, z=0.006
+  🔹 [BMP] 304ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 304ms: Alt=-0.06m, Vz=-0.09m/s, Az=-0.01m/s²
+  🔹 [IMU] 304ms: Acc=(-0.10, -0.04, 9.85) Gyro=(0.02, 0.01, -0.00) Mag=(1.00, -0.01, -0.01)
+  🚀 [QUAT] 304ms: w=1.000, x=-0.003, y=0.004, z=0.001
+  🔹 [BMP] 314ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 314ms: Alt=-0.06m, Vz=-0.09m/s, Az=-0.05m/s²
+  🔹 [IMU] 314ms: Acc=(-0.08, -0.02, 9.80) Gyro=(0.02, 0.01, 0.00) Mag=(1.00, -0.02, 0.01)
+  🚀 [QUAT] 314ms: w=1.000, x=-0.003, y=0.003, z=0.003
+  🔹 [BMP] 324ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (3628) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+[0;32mI (3668) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 44 01 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 44 01 00 00 0C 22 44 BD 0E BF D7 BD E8 23 1C 41 86 CC 3F 3C 28 ED 1C 3C 00 00 00 00 FE D4 80 3F 7F 6A BC 3C 68 91 6D 3C 0C 00 00 00 44 01 00 00 41 14 74 BD 4D E6 B7 BD 00 C8 AB 3B 0A 00 00 00 44 01 00 00 29 FF 7F 3F 35 B1 68 BB FB 57 68 3B B9 BA 45 3A 01 00 00 00 4E 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 4E 01 00 00 4F C2 79 BD D7 CD B6 BD 00 F8 B4 3B 00 00 00 00 4E 01 00 00 0A E8 9C BC 0C 22 44 BD 96 99 1C 41 50 35 94 3C D7 5C 2E 3C 00 00 00 00 E3 A5 7B 3F 12 83 C0 BC C5 20 B0 3C
+  📝 [LOG] 324ms: [SM] Current State: 0, Time: 0.00
+  🔹 [IMU] 324ms: Acc=(-0.05, -0.11, 9.76) Gyro=(0.01, 0.01, 0.00) Mag=(1.01, 0.02, 0.01)
+  🚀 [KF_ALT] 324ms: Alt=-0.06m, Vz=-0.09m/s, Az=0.01m/s²
+  🚀 [QUAT] 324ms: w=1.000, x=-0.004, y=0.004, z=0.001
+  🔹 [BMP] 334ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 334ms: Alt=-0.06m, Vz=-0.09m/s, Az=0.01m/s²
+  🔹 [IMU] 334ms: Acc=(-0.02, -0.05, 9.79) Gyro=(0.02, 0.01, 0.00) Mag=(0.98, -0.02, 0.02)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (3968) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 4E 01 00 00 2F FF 7F 3F F9 42 49 BB C2 DC 78 3B 0B 13 94 BA 01 00 00 00 58 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 58 01 00 00 0F E2 7E BD BC D8 B9 BD 00 D0 62 BC 00 00 00 00 58 01 00 00 8B B6 A6 BD 10 F9 7E BD BF 5E 1C 41 28 ED 1C 3C 79 7D 0B 3C 79 7D 0B 3B 35 5E 7A 3F 42 60 65 3B 31 08 2C BC 0A 00 00 00 58 01 00 00 E2 FE 7F 3F 78 96 89 BB C0 E9 6C 3B 86 9A F4 BA 01 00 00 00 62 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 62 01 00 00 BA EA 81 BD 22 61 B9 BD 00 87 09 3D 00 00 00 00 62 01 00 00 10 F9 FE BD 0F 5C 6B BD 0A E8 1C 41 93 1B F4 3B 93 1B 74 3C 79 7D 8B 3A B2 9D 7F 3F 7F 6A 3C BC 8F C2 F5 BB 0A 00 00 00 62 01 00 00 4A FE 7F 3F DD 9E 1A BB 2D 02 A6 3B 34 98 96 3B 01 00 00 00 6C 01 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 334ms: w=1.000, x=-0.003, y=0.004, z=-0.001
+  🔹 [BMP] 344ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 344ms: Alt=-0.06m, Vz=-0.09m/s, Az=-0.01m/s²
+  🔹 [IMU] 344ms: Acc=(-0.08, -0.06, 9.77) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, 0.00, -0.01)
+  🚀 [QUAT] 344ms: w=1.000, x=-0.004, y=0.004, z=-0.002
+  🔹 [BMP] 354ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 354ms: Alt=-0.06m, Vz=-0.09m/s, Az=0.03m/s²
+  🔹 [IMU] 354ms: Acc=(-0.12, -0.06, 9.81) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, -0.01, -0.01)
+  🚀 [QUAT] 354ms: w=1.000, x=-0.002, y=0.005, z=0.005
+  🔹 [BMP] 364ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (4168) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 6C 01 00 00 05 DD 83 BD B9 D8 B9 BD 00 B1 06 BD 0A 00 00 00 6C 01 00 00 88 FE 7F 3F 3B 6A 6A BB 08 22 9C 3B F9 48 49 BB 00 00 00 00 6C 01 00 00 0C 22 C4 BD 0A E8 9C BD 96 99 1C 41 86 CC 3F 3C 28 ED 1C 3C 35 3C 51 BB A8 C6 7B 3F B6 F3 7D 3C 8F C2 75 3C 01 00 00 00 76 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 76 01 00 00 4F E1 85 BD B3 3C BE BD 00 A0 AB 3B 00 00 00 00 76 01 00 00 10 F9 7E BD 0C 22 C4 BD 85 37 1C 41 A1 C5 82 3C D7 5C 2E 3C 79 7D 8B BB E7 FB 79 3F F4 FD D4 3B 42 60 65 BC 0A 00 00 00 76 01 00 00 42 FE 7F 3F C4 3B B4 BB DC AA 68 3B 5B EC 51 BB 01 00 00 00 80 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 80 01 00 00 4C 0A 88 BD E4 40 C3 BD 00 A8 C4 BC
+  🚀 [KF_ALT] 364ms: Alt=-0.06m, Vz=-0.09m/s, Az=-0.03m/s²
+  🚀 [QUAT] 364ms: w=1.000, x=-0.004, y=0.005, z=-0.003
+  🔹 [IMU] 364ms: Acc=(-0.10, -0.08, 9.79) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, 0.02, 0.01)
+  🔹 [BMP] 374ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 374ms: Alt=-0.07m, Vz=-0.09m/s, Az=0.01m/s²
+  🔹 [IMU] 374ms: Acc=(-0.06, -0.10, 9.76) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, 0.01, -0.01)
+  🚀 [QUAT] 374ms: w=1.000, x=-0.006, y=0.004, z=-0.003
+  🔹 [BMP] 384ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 384ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.02m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+[0;32mI (4368) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 80 01 00 00 90 2A F5 BD 09 4B 89 BD BF 5E 1C 41 E4 AB 62 3C 86 CC 3F 3C 35 3C 51 3B 83 C0 7A 3F 6F 12 83 3A 42 60 65 BC 0A 00 00 00 80 01 00 00 CC FE 7F 3F 05 01 42 BB CC 19 A0 3B 50 BE 05 BB 01 00 00 00 8A 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 8A 01 00 00 FA 5F 8A BD A7 06 C6 BD 00 12 0D 3D 00 00 00 00 8A 01 00 00 09 4B 89 BD 0A E8 1C BD 22 4B 1C 41 28 ED 9C 3C 86 CC 3F 3C 35 3C 51 BB 60 E5 80 3F A6 9B 44 BC 8F C2 F5 3B 0A 00 00 00 8A 01 00 00 E4 FE 7F 3F 70 3D 3A BB 7D CC 8E 3B E4 08 2B 3B 01 00 00 00 94 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 94 01 00 00 34 C4 8C BD 42 A8 C9 BD 00 1E A3 3C 00 00 00 00 94 01 00 00 0B 85 B0 BD 10 F9 7E BD 55 71 1D 41 93 1B 74 3C 93 1B 74 3C 79 7D 0B 3B 62 10 80 3F F4 FD D4 BB A6 9B C4 BB
+  🔹 [IMU] 384ms: Acc=(-0.12, -0.07, 9.77) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, 0.00, -0.01)
+  🚀 [QUAT] 384ms: w=1.000, x=-0.003, y=0.005, z=-0.002
+  🔹 [BMP] 394ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 394ms: Alt=-0.07m, Vz=-0.10m/s, Az=0.03m/s²
+  🔹 [IMU] 394ms: Acc=(-0.07, -0.04, 9.77) Gyro=(0.02, 0.01, -0.00) Mag=(1.01, -0.01, 0.01)
+  🚀 [QUAT] 394ms: w=1.000, x=-0.003, y=0.004, z=0.003
+  🔹 [BMP] 404ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 404ms: Alt=-0.07m, Vz=-0.10m/s, Az=0.02m/s²
+  🔹 [IMU] 404ms: Acc=(-0.09, -0.06, 9.84) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, -0.01, -0.01)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (4668) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 94 01 00 00 C9 FE 7F 3F C5 65 23 BB F7 60 8C 3B 16 6A 69 3B 01 00 00 00 9E 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 9E 01 00 00 CF CE 8E BD 6E BD CA BD 00 AA C2 BC 00 00 00 00 9E 01 00 00 0C 22 44 BD 49 32 0E BE 85 37 1C 41 93 1B 74 3C 93 1B F4 3B 79 7D 8B BA 1B 2F 7D 3F A6 9B C4 BC F4 FD 54 3C 0A 00 00 00 9E 01 00 00 A4 FF 7F 3F 0C 84 E5 BA DA 05 39 3B A0 36 E8 B8 01 00 00 00 A8 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 A8 01 00 00 CE F5 90 BD 59 8C CF BD 00 6C 16 BC 00 00 00 00 A8 01 00 00 C8 63 04 BE 0A E8 1C BD 96 99 1C 41 86 CC 3F 3C 86 CC 3F 3C D7 5C AE BB 71 3D 7A 3F 6F 12 83 BC CD CC 4C 3C 0A 00 00 00 A8 01 00 00 FE FE 7F 3F 32 B9 40 BB 19 95 92 3B 02 98 C3 BA 01 00 00 00 B2 01 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 404ms: w=1.000, x=-0.002, y=0.004, z=0.004
+  🔹 [BMP] 414ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 414ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.02m/s²
+  🔹 [IMU] 414ms: Acc=(-0.05, -0.14, 9.76) Gyro=(0.01, 0.01, -0.00) Mag=(0.99, -0.02, 0.01)
+  🚀 [QUAT] 414ms: w=1.000, x=-0.002, y=0.003, z=-0.000
+  🔹 [BMP] 424ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 424ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.01m/s²
+  🔹 [IMU] 424ms: Acc=(-0.13, -0.04, 9.79) Gyro=(0.01, 0.01, -0.01) Mag=(0.98, -0.02, 0.01)
+  🚀 [QUAT] 424ms: w=1.000, x=-0.003, y=0.004, z=-0.001
+  🔹 [BMP] 434ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (4728) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+[0;32mI (4768) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 B2 01 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 B2 01 00 00 0E BF 57 BD 0C 22 44 BD F9 85 1C 41 28 ED 1C 3C 79 7D 0B 3C 35 3C 51 BB 87 16 81 3F A6 9B C4 BB 77 BE 9F BC 0C 00 00 00 B2 01 00 00 E2 1A 93 BD E1 D8 CF BD 00 30 83 BB 0A 00 00 00 B2 01 00 00 63 FF 7F 3F 3C CD 45 BB D5 AA 40 3B CA 18 85 BA 01 00 00 00 BC 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 BC 01 00 00 4B FC 94 BD DF F0 D0 BD 00 15 2E BD 00 00 00 00 BC 01 00 00 0C 22 44 BD 0F 5C 6B BD 1B 4A 1D 41 93 1B 74 3C 86 CC 3F 3C 79 7D 8B 3A FA 7E 7A 3F E3 A5 9B BC 6F 12 83 BA
+  📝 [LOG] 434ms: [SM] Current State: 0, Time: 0.00
+  🔹 [IMU] 434ms: Acc=(-0.05, -0.05, 9.78) Gyro=(0.01, 0.01, -0.00) Mag=(1.01, -0.01, -0.02)
+  🚀 [KF_ALT] 434ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.00m/s²
+  🚀 [QUAT] 434ms: w=1.000, x=-0.003, y=0.003, z=-0.001
+  🔹 [BMP] 444ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 444ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.04m/s²
+  🔹 [IMU] 444ms: Acc=(-0.05, -0.06, 9.83) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, -0.02, -0.00)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (5068) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 BC 01 00 00 3F FF 7F 3F 6B 94 33 BB D9 09 81 3B 2A B1 AC 39 01 00 00 00 C6 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 C6 01 00 00 2A 91 96 BD 56 A2 D0 BD 00 B4 B9 BC 00 00 00 00 C6 01 00 00 09 4B 89 BD 0A E8 9C BD 1B 4A 1D 41 E4 AB 62 3C 28 ED 1C 3C 79 7D 8B 3B 3F 35 7E 3F 58 39 34 BC 29 5C 8F 3C 0A 00 00 00 C6 01 00 00 00 FF 7F 3F 8D 36 7F BB 37 13 7F 3B 5E 0E 2C BA 01 00 00 00 D0 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 D0 01 00 00 8E 18 98 BD CA 0A D3 BD 00 D2 BF BC 00 00 00 00 D0 01 00 00 0F 5C 6B BD 09 4B 89 BD 0A E8 1C 41 79 7D 8B 3C D7 5C 2E 3C 35 3C 51 BB B6 F3 7D 3F 6F 12 03 3A 42 60 65 BC 0A 00 00 00 D0 01 00 00 CC FE 7F 3F 02 6E 31 BB 64 A9 7D 3B D3 E6 78 BB 01 00 00 00 DA 01 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 444ms: w=1.000, x=-0.003, y=0.004, z=0.000
+  🔹 [BMP] 454ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 454ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.02m/s²
+  🔹 [IMU] 454ms: Acc=(-0.07, -0.08, 9.83) Gyro=(0.01, 0.01, 0.00) Mag=(0.99, -0.01, 0.02)
+  🚀 [QUAT] 454ms: w=1.000, x=-0.004, y=0.004, z=-0.001
+  🔹 [BMP] 464ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 464ms: Alt=-0.07m, Vz=-0.10m/s, Az=-0.02m/s²
+  🔹 [IMU] 464ms: Acc=(-0.06, -0.07, 9.81) Gyro=(0.02, 0.01, -0.00) Mag=(0.99, 0.00, -0.01)
+  🚀 [QUAT] 464ms: w=1.000, x=-0.003, y=0.004, z=-0.004
+  🔹 [BMP] 474ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (5268) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 DA 01 00 00 6E CA 99 BD 31 0B D8 BD 00 10 99 BC 0A 00 00 00 DA 01 00 00 D8 FD 7F 3F D2 91 3F BB 63 00 67 3A 9B 81 F6 BB 00 00 00 00 DA 01 00 00 0A E8 1C BC 0F 5C 6B BD 85 37 1C 41 50 35 94 3C 35 3C 51 3B 79 7D 8B 3A 23 DB 81 3F 6F 12 83 3C 0A D7 A3 BB 01 00 00 00 E4 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 E4 01 00 00 C0 B0 9B BD 86 E5 DA BD 00 44 C9 3C 00 00 00 00 E4 01 00 00 8E 8D E1 BD 8B B6 A6 BD 22 4B 1C 41 35 3C 51 3C 79 7D 0B 3C 79 7D 8B BA A8 C6 7B 3F 31 08 AC 3C BC 74 13 BC 0A 00 00 00 E4 01 00 00 99 FD 7F 3F DE AA 84 BB 6C 02 91 3B 52 8D C8 BB 01 00 00 00 EE 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 EE 01 00 00 10 9C 9D BD 63 2E DD BD 00 AD 32 3D
+  🚀 [KF_ALT] 474ms: Alt=-0.08m, Vz=-0.11m/s, Az=-0.02m/s²
+  🚀 [QUAT] 474ms: w=1.000, x=-0.003, y=0.001, z=-0.008
+  🔹 [IMU] 474ms: Acc=(-0.01, -0.06, 9.76) Gyro=(0.02, 0.00, 0.00) Mag=(1.01, 0.02, -0.00)
+  🔹 [BMP] 484ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 484ms: Alt=-0.08m, Vz=-0.11m/s, Az=0.02m/s²
+  🔹 [IMU] 484ms: Acc=(-0.11, -0.08, 9.77) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, 0.02, -0.01)
+  🚀 [QUAT] 484ms: w=1.000, x=-0.004, y=0.004, z=-0.006
+  🔹 [BMP] 494ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 494ms: Alt=-0.08m, Vz=-0.11m/s, Az=0.04m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (5468) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 EE 01 00 00 8B B6 A6 BD 8C 53 BA BD E1 22 1D 41 93 1B 74 3C 28 ED 1C 3C 79 7D 8B 3A 21 B0 82 3F 42 60 65 3C F4 FD D4 BB 0A 00 00 00 EE 01 00 00 27 FD 7F 3F 9D 3F 9E BB 37 20 95 3B 53 81 D6 BB 01 00 00 00 F8 01 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 F8 01 00 00 54 50 9F BD DB 9C DE BD 00 00 76 3C 00 00 00 00 F8 01 00 00 90 2A F5 BD 0F 5C 6B BD 22 4B 1C 41 E4 AB 62 3C 28 ED 1C 3C 00 00 00 00 83 C0 7A 3F A6 9B C4 3A EC 51 B8 3C 0A 00 00 00 F8 01 00 00 E9 FD 7F 3F 34 3E 32 BB A1 76 C7 3B 73 37 90 BB 01 00 00 00 02 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 02 02 00 00 7C F2 A0 BD 6D 0B E1 BD 00 24 61 BC 00 00 00 00 02 02 00 00 0A E8 1C BD 0C 22 44 BD 6D D4 1C 41 93 1B 74 3C D7 5C 2E 3C 00 00 00 00 71 3D 82 3F A6 9B C4 BC 77 BE 9F 3C
+  🔹 [IMU] 494ms: Acc=(-0.08, -0.09, 9.82) Gyro=(0.01, 0.01, 0.00) Mag=(1.02, 0.01, -0.01)
+  🚀 [QUAT] 494ms: w=1.000, x=-0.005, y=0.005, z=-0.007
+  🔹 [BMP] 504ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 504ms: Alt=-0.08m, Vz=-0.11m/s, Az=0.02m/s²
+  🔹 [IMU] 504ms: Acc=(-0.12, -0.06, 9.77) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, 0.00, 0.02)
+  🚀 [QUAT] 504ms: w=1.000, x=-0.003, y=0.006, z=-0.004
+  🔹 [BMP] 514ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 514ms: Alt=-0.08m, Vz=-0.11m/s, Az=-0.01m/s²
+  🔹 [IMU] 514ms: Acc=(-0.04, -0.05, 9.80) Gyro=(0.01, 0.01, 0.00) Mag=(1.02, -0.02, 0.02)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (5768) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 02 02 00 00 42 FF 7F 3F 5D C8 E0 BA 19 EB 89 3B DF 51 BB 3A 01 00 00 00 0C 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 0C 02 00 00 82 73 A2 BD 8C 8A E1 BD 00 08 64 BC 00 00 00 00 0C 02 00 00 0F 5C EB BD 0B 85 B0 BD 85 37 1C 41 35 3C 51 3C D7 5C 2E 3C 79 7D 8B BA C1 CA 81 3F 00 00 00 00 12 83 C0 BC 0A 00 00 00 0C 02 00 00 72 FE 7F 3F 5D E6 88 BB 79 02 B3 3B 76 DA 14 3A 01 00 00 00 16 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 16 02 00 00 78 01 A4 BD EB 8B E5 BD 00 F9 2E BD 00 00 00 00 16 02 00 00 89 19 93 BD 0E BF 57 BD 85 37 1C 41 A1 C5 82 3C 86 CC 3F 3C 79 7D 0B BB 29 5C 7F 3F 6F 12 83 3C 6F 12 03 BC 0A 00 00 00 16 02 00 00 1D FF 7F 3F 12 74 24 BB 4A 64 8A 3B 3D 57 E2 BA 01 00 00 00 20 02 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 514ms: w=1.000, x=-0.002, y=0.004, z=0.001
+  🔹 [BMP] 524ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 524ms: Alt=-0.08m, Vz=-0.11m/s, Az=-0.01m/s²
+  🔹 [IMU] 524ms: Acc=(-0.11, -0.09, 9.76) Gyro=(0.01, 0.01, -0.00) Mag=(1.01, 0.00, -0.02)
+  🚀 [QUAT] 524ms: w=1.000, x=-0.004, y=0.005, z=0.001
+  🔹 [BMP] 534ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 534ms: Alt=-0.08m, Vz=-0.11m/s, Az=-0.04m/s²
+  🔹 [IMU] 534ms: Acc=(-0.07, -0.05, 9.76) Gyro=(0.02, 0.01, -0.00) Mag=(1.00, 0.02, -0.01)
+  🚀 [QUAT] 534ms: w=1.000, x=-0.003, y=0.004, z=-0.002
+  🔹 [BMP] 544ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (5828) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+[0;32mI (5868) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 20 02 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 02 00 00 8D F0 CD BD 0B 85 B0 BD 33 AD 1C 41 E4 AB 62 3C 28 ED 1C 3C 79 7D 8B BA FA 7E 7A 3F 58 39 B4 BB A6 9B 44 3B 0C 00 00 00 20 02 00 00 89 B7 A5 BD 8C 9C E8 BD 00 40 AA 3B 0A 00 00 00 20 02 00 00 CC FE 7F 3F E2 47 77 BB 08 D6 9A 3B 0F 6D CA B9 01 00 00 00 2A 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 2A 02 00 00 D2 76 A7 BD 0E 2D EE BD 00 42 06 BD 00 00 00 00 2A 02 00 00 0F 5C 6B BD 10 F9 7E BD E1 22 1D 41 E4 AB 62 3C 79 7D 0B 3C 79 7D 0B 3B 85 EB 81 3F 0A D7 23 3C 68 91 6D 3C
+  📝 [LOG] 544ms: [SM] Current State: 0, Time: 0.00
+  🔹 [IMU] 544ms: Acc=(-0.10, -0.09, 9.79) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, -0.01, 0.00)
+  🚀 [KF_ALT] 544ms: Alt=-0.08m, Vz=-0.11m/s, Az=0.01m/s²
+  🚀 [QUAT] 544ms: w=1.000, x=-0.004, y=0.005, z=-0.000
+  🔹 [BMP] 554ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 554ms: Alt=-0.08m, Vz=-0.12m/s, Az=-0.03m/s²
+  🔹 [IMU] 554ms: Acc=(-0.06, -0.06, 9.82) Gyro=(0.01, 0.01, 0.00) Mag=(1.01, 0.01, 0.01)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (6168) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 2A 02 00 00 3B FF 7F 3F 30 D6 45 BB 5E FB 6C 3B 89 5A 9D 3A 01 00 00 00 34 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 34 02 00 00 D0 4B A9 BD 47 D6 EE BD 00 98 85 BB 00 00 00 00 34 02 00 00 8E 8D E1 BD 09 4B 89 BD 4B 10 1C 41 79 7D 8B 3C 28 ED 1C 3C 79 7D 0B BB 6D E7 7B 3F 58 39 B4 3B 58 39 34 3C 0A 00 00 00 34 02 00 00 A1 FE 7F 3F 51 FA 6E BB 9D 04 AC 3B 8F F7 81 BA 01 00 00 00 3E 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 3E 02 00 00 11 14 AB BD B1 80 F1 BD 00 BA C2 BC 00 00 00 00 3E 02 00 00 49 32 0E BE 0F 5C 6B BD 33 AD 1C 41 D7 5C 2E 3C 86 CC 3F 3C 00 00 00 00 B2 9D 7F 3F 6F 12 03 BC 42 60 65 3C 0A 00 00 00 3E 02 00 00 10 FF 7F 3F A7 CA 0A BB A5 17 9B 3B 76 32 B0 3A 01 00 00 00 48 02 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 554ms: w=1.000, x=-0.003, y=0.004, z=0.001
+  🔹 [BMP] 564ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 564ms: Alt=-0.08m, Vz=-0.12m/s, Az=-0.00m/s²
+  🔹 [IMU] 564ms: Acc=(-0.11, -0.07, 9.75) Gyro=(0.02, 0.01, -0.00) Mag=(0.98, 0.01, 0.01)
+  🚀 [QUAT] 564ms: w=1.000, x=-0.004, y=0.005, z=-0.001
+  🔹 [BMP] 574ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 574ms: Alt=-0.08m, Vz=-0.12m/s, Az=-0.02m/s²
+  🔹 [IMU] 574ms: Acc=(-0.14, -0.06, 9.79) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, -0.01, 0.01)
+  🚀 [QUAT] 574ms: w=1.000, x=-0.002, y=0.005, z=0.001
+  🔹 [BMP] 584ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (6368) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 48 02 00 00 B0 EF AC BD E6 1D F5 BD 00 00 71 3C 0A 00 00 00 48 02 00 00 DA FD 7F 3F 0A 93 0E BB F5 55 8A 3B 80 29 D7 3B 00 00 00 00 48 02 00 00 8B B6 A6 BD 0B 85 30 BD 96 99 1C 41 D7 5C 2E 3C D7 5C 2E 3C 00 00 00 00 EC 51 80 3F EC 51 B8 BC 31 08 2C BC 01 00 00 00 52 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 52 02 00 00 A0 D0 AE BD 10 8D F8 BD 00 EA C1 BC 00 00 00 00 52 02 00 00 0A E8 9C BD 10 F9 7E BD D7 C1 1B 41 86 CC 3F 3C 35 3C 51 3C 79 7D 8B BA 12 83 80 3F A6 9B C4 3A 96 43 8B BC 0A 00 00 00 52 02 00 00 02 FF 7F 3F 8E 02 61 BB 27 18 8D 3B C3 CA 3D B9 01 00 00 00 5C 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 5C 02 00 00 77 D0 B0 BD 4D 64 FC BD 00 68 07 BD
+  🚀 [KF_ALT] 584ms: Alt=-0.08m, Vz=-0.12m/s, Az=0.01m/s²
+  🚀 [QUAT] 584ms: w=1.000, x=-0.002, y=0.004, z=0.007
+  🔹 [IMU] 584ms: Acc=(-0.08, -0.04, 9.79) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, -0.02, -0.01)
+  🔹 [BMP] 594ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 594ms: Alt=-0.09m, Vz=-0.12m/s, Az=-0.02m/s²
+  🔹 [IMU] 594ms: Acc=(-0.08, -0.06, 9.73) Gyro=(0.01, 0.01, -0.00) Mag=(1.00, 0.00, -0.02)
+  🚀 [QUAT] 594ms: w=1.000, x=-0.003, y=0.004, z=-0.000
+  🔹 [BMP] 604ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 604ms: Alt=-0.09m, Vz=-0.12m/s, Az=-0.03m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+[0;32mI (6568) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 00 00 00 00 5C 02 00 00 09 4B 89 BD 8B B6 A6 BD 96 99 1C 41 93 1B 74 3C E4 AB 62 3C 79 7D 0B 3B 35 5E 7A 3F 6F 12 03 BA 1B 2F 5D BC 0A 00 00 00 5C 02 00 00 02 FF 7F 3F 24 94 7C BB 7B 72 6C 3B 06 06 CE BA 01 00 00 00 66 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 66 02 00 00 19 D7 B2 BD 75 6C FF BD 00 64 73 3C 00 00 00 00 66 02 00 00 09 4B 09 BD 0B 85 B0 BD 33 AD 1C 41 86 CC 3F 3C 86 CC 3F 3C 35 3C 51 BB FC A9 81 3F 6F 12 83 3A 96 43 0B BC 0A 00 00 00 66 02 00 00 38 FF 7F 3F F9 76 36 BB 8E 7A 79 3B C3 63 A6 BA 01 00 00 00 70 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 70 02 00 00 EF A5 B4 BD 34 79 FF BD 00 0B 1A BD 00 00 00 00 70 02 00 00 0E BF 57 BD 0E BF 57 BD A7 FB 1C 41 35 3C 51 3C 35 3C 51 3C 79 7D 8B 3B 29 5C 7F 3F EC 51 B8 3C 02 2B 87 BC
+  🔹 [IMU] 604ms: Acc=(-0.07, -0.08, 9.79) Gyro=(0.01, 0.01, 0.00) Mag=(0.98, -0.00, -0.01)
+  🚀 [QUAT] 604ms: w=1.000, x=-0.004, y=0.004, z=-0.002
+  🔹 [BMP] 614ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 614ms: Alt=-0.09m, Vz=-0.12m/s, Az=0.01m/s²
+  🔹 [IMU] 614ms: Acc=(-0.03, -0.09, 9.79) Gyro=(0.01, 0.01, -0.00) Mag=(1.01, 0.00, -0.01)
+  🚀 [QUAT] 614ms: w=1.000, x=-0.003, y=0.004, z=-0.001
+  🔹 [BMP] 624ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 624ms: Alt=-0.09m, Vz=-0.12m/s, Az=-0.04m/s²
+  🔹 [IMU] 624ms: Acc=(-0.05, -0.05, 9.81) Gyro=(0.01, 0.01, 0.00) Mag=(1.00, 0.02, -0.02)
+  ✅ 解析完成：共 9 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (6868) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 70 02 00 00 01 FF 7F 3F 2F E5 4B BB E7 18 95 3B 78 BE 94 39 01 00 00 00 7A 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 7A 02 00 00 D8 32 B6 BD 3D 61 FF BD 00 76 98 BC 00 00 00 00 7A 02 00 00 0A E8 9C BD 0A E8 1C BE 6D D4 1C 41 E4 AB 62 3C 93 1B F4 3B 79 7D 8B 3A 21 B0 82 3F 9E EF A7 3C B6 F3 7D BC 0A 00 00 00 7A 02 00 00 DF FE 7F 3F A2 B4 70 BB 73 60 93 3B F0 2F 6E BA 01 00 00 00 84 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 84 02 00 00 0D 94 B7 BD 3A 98 00 BE 00 0E 98 BC 00 00 00 00 84 02 00 00 10 F9 7E BD 09 4B 89 BD BF 5E 1C 41 93 1B 74 3C 86 CC 3F 3C 35 3C 51 BB CD CC 7C 3F 58 39 B4 3C F4 FD 54 BC 0A 00 00 00 84 02 00 00 FA FE 7F 3F 78 CB 37 BB 13 28 8F 3B CD EC 0A 3B 01 00 00 00 8E 02 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 624ms: w=1.000, x=-0.003, y=0.005, z=0.000
+  🔹 [BMP] 634ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 634ms: Alt=-0.09m, Vz=-0.12m/s, Az=-0.02m/s²
+  🔹 [IMU] 634ms: Acc=(-0.08, -0.15, 9.80) Gyro=(0.01, 0.01, 0.00) Mag=(1.02, 0.02, -0.02)
+  🚀 [QUAT] 634ms: w=1.000, x=-0.004, y=0.004, z=-0.001
+  🔹 [BMP] 644ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 644ms: Alt=-0.09m, Vz=-0.13m/s, Az=-0.02m/s²
+  🔹 [IMU] 644ms: Acc=(-0.06, -0.07, 9.77) Gyro=(0.01, 0.01, -0.00) Mag=(0.99, 0.02, -0.01)
+  🚀 [QUAT] 644ms: w=1.000, x=-0.003, y=0.004, z=0.002
+  🔹 [BMP] 654ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (6928) DataManager: Log Record: [SM] Current State: 0, Time: 0.00[0m
+[0;32mI (6968) StorageComm: Simulated Serial TX Start: Sending 240 bytes...[0m
+
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 03 00 00 00 8E 02 00 00 5B 53 4D 5D 20 43 75 72 72 65 6E 74 20 53 74 61 74 65 3A 20 30 2C 20 54 69 6D 65 3A 20 30 2E 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 8E 02 00 00 8B B6 A6 BD 0F 5C 6B 3C E8 23 1C 41 35 3C 51 3C D7 5C 2E 3C 79 7D 8B BA 1F 85 7B 3F 0A D7 A3 BC CD CC 4C BC 0C 00 00 00 8E 02 00 00 9F F5 B8 BD 14 90 00 BE 00 60 1F 3C 0A 00 00 00 8E 02 00 00 7C FF 7F 3F AD E4 A3 BA 29 44 75 3B 10 76 02 3A 01 00 00 00 98 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 98 02 00 00 C1 41 BA BD 45 1A 02 BE 00 01 08 BD 00 00 00 00 98 02 00 00 89 19 93 BD 0A E8 1C BD 44 0F 1D 41 50 35 94 3C 93 1B F4 3B 35 3C 51 BB 85 EB 81 3F 8F C2 75 3C BC 74 13 3C
+  📝 [LOG] 654ms: [SM] Current State: 0, Time: 0.00
+  🔹 [IMU] 654ms: Acc=(-0.08, 0.01, 9.76) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, -0.02, -0.01)
+  🚀 [KF_ALT] 654ms: Alt=-0.09m, Vz=-0.13m/s, Az=0.01m/s²
+  🚀 [QUAT] 654ms: w=1.000, x=-0.001, y=0.004, z=0.000
+  🔹 [BMP] 664ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 664ms: Alt=-0.09m, Vz=-0.13m/s, Az=-0.03m/s²
+  🔹 [IMU] 664ms: Acc=(-0.07, -0.04, 9.82) Gyro=(0.02, 0.01, -0.00) Mag=(1.01, 0.01, 0.01)
+  ✅ 解析完成：共 7 筆資料封包
+
+指令 >
+
+
+
+
+
+
+        [0;32mI (7268) StorageComm: Simulated Serial TX Start: Sending 248 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0A 00 00 00 98 02 00 00 87 FF 7F 3F F4 63 E6 BA 2A 62 51 3B 11 51 93 3A 01 00 00 00 A2 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 A2 02 00 00 D3 A3 BB BD 12 AF 04 BE 00 36 E3 BC 00 00 00 00 A2 02 00 00 0C 22 C4 BD 0F 5C 6B BC AE FC 1B 41 D7 5C AE 3B 35 3C 51 3C 79 7D 8B 3A 9C C4 80 3F A6 9B C4 3C 39 B4 C8 BC 0A 00 00 00 A2 02 00 00 E2 FE 7F 3F 45 C4 0E BB F2 9D A7 3B 16 DD E7 BA 01 00 00 00 AC 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 AC 02 00 00 5C 4F BD BD 41 9C 05 BE 00 74 77 3C 00 00 00 00 AC 02 00 00 8C 53 BA BD 0A E8 9C BD F9 85 1C 41 E4 AB 62 3C 86 CC 3F 3C D7 5C AE BB 1F 85 7B 3F 31 08 2C 3C 96 43 0B 3C 0A 00 00 00 AC 02 00 00 7A FE 7F 3F 78 C4 74 BB 9E 47 9C 3B FD 33 4D BB 01 00 00 00 B6 02 00 00 00 50 7D 44 00 00 C8 41
+  🚀 [QUAT] 664ms: w=1.000, x=-0.002, y=0.003, z=0.001
+  🔹 [BMP] 674ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 674ms: Alt=-0.09m, Vz=-0.13m/s, Az=-0.03m/s²
+  🔹 [IMU] 674ms: Acc=(-0.10, -0.01, 9.75) Gyro=(0.01, 0.01, 0.00) Mag=(1.01, 0.02, -0.02)
+  🚀 [QUAT] 674ms: w=1.000, x=-0.002, y=0.005, z=-0.002
+  🔹 [BMP] 684ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 684ms: Alt=-0.09m, Vz=-0.13m/s, Az=0.02m/s²
+  🔹 [IMU] 684ms: Acc=(-0.09, -0.08, 9.78) Gyro=(0.01, 0.01, -0.01) Mag=(0.98, 0.01, 0.01)
+  🚀 [QUAT] 684ms: w=1.000, x=-0.004, y=0.005, z=-0.003
+  🔹 [BMP] 694ms: Press=1013.25hPa, Temp=25.00C
+  ✅ 解析完成：共 10 筆資料封包
+
+[0;32mI (7468) StorageComm: Simulated Serial TX Start: Sending 228 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
+[📦 收到 RF 緩衝區封包]
+  [RAW HEX] 0C 00 00 00 B6 02 00 00 2C E1 BE BD 8E 84 08 BE 00 F0 6A BD 0A 00 00 00 B6 02 00 00 86 FF 7F 3F D2 39 EA BA 1D 9D 52 3B 43 AD 82 BA 00 00 00 00 B6 02 00 00 8D F0 CD BD 0F 5C 6B BC 5C 72 1C 41 50 35 94 3C 86 CC 3F 3C 79 7D 0B BB D5 78 81 3F CD CC 4C BC 39 B4 C8 BC 01 00 00 00 C0 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 C0 02 00 00 39 A4 C0 BD 1C AB 08 BE 00 38 B4 3B 00 00 00 00 C0 02 00 00 8C 53 BA BD 0B 85 B0 BD A7 FB 1C 41 E4 AB 62 3C 79 7D 0B 3C 35 3C 51 BB 23 DB 79 3F 0A D7 23 3B BC 74 93 3B 0A 00 00 00 C0 02 00 00 BD FE 7F 3F A7 0D 73 BB C6 4E A1 3B 00 26 52 BA 01 00 00 00 CA 02 00 00 00 50 7D 44 00 00 C8 41 0C 00 00 00 CA 02 00 00 4A E9 C1 BD C6 32 08 BE 00 36 E5 BC
+  🚀 [KF_ALT] 694ms: Alt=-0.09m, Vz=-0.13m/s, Az=-0.06m/s²
+  🚀 [QUAT] 694ms: w=1.000, x=-0.002, y=0.003, z=-0.001
+  🔹 [IMU] 694ms: Acc=(-0.10, -0.01, 9.78) Gyro=(0.02, 0.01, -0.00) Mag=(1.01, -0.01, -0.02)
+  🔹 [BMP] 704ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 704ms: Alt=-0.09m, Vz=-0.13m/s, Az=0.01m/s²
+  🔹 [IMU] 704ms: Acc=(-0.09, -0.09, 9.81) Gyro=(0.01, 0.01, -0.00) Mag=(0.98, 0.00, 0.00)
+  🚀 [QUAT] 704ms: w=1.000, x=-0.004, y=0.005, z=-0.001
+  🔹 [BMP] 714ms: Press=1013.25hPa, Temp=25.00C
+  🚀 [KF_ALT] 714ms: Alt=-0.09m, Vz=-0.13m/s, Az=-0.03m/s²
+  ✅ 解析完成：共 9 筆資料封包
+
+[0;32mI (7668) StorageComm: Simulated Serial TX Start: Sending 252 bytes...[0m
+指令 >
+
+
+
+
+
+
+        
