@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../esp32-s test"
+		},
+		{
+			"name": "P2026",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

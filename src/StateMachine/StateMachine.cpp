@@ -1,18 +1,15 @@
 #include "StateMachine.hpp"
-#include "../DataManager/DataManager.hpp"
+
 #include <stdio.h>
 #include <math.h>
 #include "nvs_flash.h"
 #include "nvs.h"
 #include "esp_timer.h"
 
-StateMachine::StateMachine(SensorManager* sensors, RecoveryManager* recovery, InterCoreComm* comm) 
-    : _sensors(sensors), _recovery(recovery), _comm(comm), _dataManager(NULL), _taskHandle(NULL), 
-      _motorSeparated(false), _startTime(0.0f) {
+StateMachine::StateMachine(SensorManager* sensors, RecoveryManager* recovery, InterCoreComm* comm) : _state(STBY_IDLE), _lastPushedState(STBY_IDLE), _sensors(sensors), _recovery(recovery), _comm(comm), _taskHandle(NULL), 
+      _startTime(0.0f), _motorSeparated(false) {
     permitKalmanFilter = xSemaphoreCreateBinary();
     stateQueue = xQueueCreate(10, sizeof(StateEvent));
-    _state = STBY_IDLE;
-    _lastPushedState = STBY_IDLE;
     _lastLat = 0; _lastLon = 0;
 
     nvs_handle_t handle;
@@ -42,9 +39,18 @@ void StateMachine::taskWrapper(void* pvParameters) {
 void StateMachine::stateMachineTask() {
     StateEvent event;
     const TickType_t timeoutTicks = pdMS_TO_TICKS(60000);
+    TickType_t lastLogTick = 0;
 
     while (1) {
-        if (xQueueReceive(stateQueue, &event, portMAX_DELAY) == pdTRUE) {
+        TickType_t now = xTaskGetTickCount();
+        if (now - lastLogTick > pdMS_TO_TICKS(1000)) {
+            char logBuf[64];
+            snprintf(logBuf, sizeof(logBuf), "[SM] Current State: %d, Time: %.2f", (int)_state, (_startTime > 0) ? (esp_timer_get_time() / 1000000.0f - _startTime) : 0);
+            _comm->sendLog(logBuf);
+            lastLogTick = now;
+        }
+
+        if (xQueueReceive(stateQueue, &event, pdMS_TO_TICKS(100)) == pdTRUE) {
             if (switchValid(event.state)) {
                 transitionTo(event.state);
             } else {
@@ -69,7 +75,11 @@ void StateMachine::pushState(STATENUM newState) {
 }
 
 bool StateMachine::switchValid(STATENUM newState) {
+    // 允許強制切換回 STBY_IDLE 進行系統重置
+    if (newState == STBY_IDLE) return true;
+
     if (_state == FLIGHT_P12_TERMINATE) return false;
+    if (newState == FLIGHT_P12_TERMINATE) return true;
     
     // 飛行狀態差時檢查 (時間保護)
     if (_startTime > 0.0f) {
@@ -96,7 +106,7 @@ bool StateMachine::switchValid(STATENUM newState) {
 
 void StateMachine::transitionTo(STATENUM newState) {
     char logBuf[64];
-    snprintf(logBuf, sizeof(logBuf), "State: %d -> %d", _state, newState);
+    snprintf(logBuf, sizeof(logBuf), "State: %d -> %d", (int)_state, (int)newState);
     _comm->sendLog(logBuf); 
 
     if (newState == FLIGHT_P6_POWERED) {
@@ -108,6 +118,17 @@ void StateMachine::transitionTo(STATENUM newState) {
     _lastPushedState = newState; // 同步狀態
     
     switch (newState) {
+        case STBY_IDLE:
+            _startTime = 0.0f;
+            _motorSeparated = false;
+            _comm->sendLog("ACTION: System Reset to STBY_IDLE");
+            break;
+        case CAL_GYRO:
+            _comm->sendLog("ACTION: Calibrating Gyro...");
+            if (_sensors && _sensors->getKalmanFilter()) {
+                _sensors->getKalmanFilter()->startGyroCalibration();
+            }
+            break;
         case FLIGHT_P8_9_APOGEE:
             _recovery->deployDrogue();
             _comm->sendLog("ACTION: Drogue Deployed");
@@ -150,8 +171,8 @@ void StateMachine::saveStateToNVM(STATENUM state) {
 }
 
 void StateMachine::processKalmanForTrigger(float alt, float vz, float az) {
-    if (!_dataManager) return;
-    HealthMonitor& health = _dataManager->getHealthMonitor();
+    if (!_sensors) return;
+    HealthMonitor& health = _sensors->getHealthMonitor();
 
     // 計算自點火起的飛行時間
     float flightTime = (_startTime > 0) ? (esp_timer_get_time() / 1000000.0f - _startTime) : 0;
@@ -223,9 +244,6 @@ void StateMachine::processKalmanForTrigger(float alt, float vz, float az) {
 }
 
 
-
-
-
 void StateMachine::processImuForTrigger(float ax, float ay, float az, float gx, float gy, float gz) {
     if (_state == STBY_IDLE && az > 19.6f) {
         _comm->sendLog("TRIGGER: Launch G-force detected");
@@ -246,10 +264,3 @@ float StateMachine::calculateDistanceToTarget() {
 
 STATENUM StateMachine::getCurrentState() { return _state; }
 
-void StateMachine::processImuForTrigger(float ax, float ay, float az, float gx, float gy, float gz) {
-    if (_state == STBY_IDLE && az > 19.6f) {
-        _comm->sendLog("TRIGGER: Launch G-force detected");
-        pushState(STBY_BIT);
-        pushState(FLIGHT_P5_IGNITION);
-    }
-}

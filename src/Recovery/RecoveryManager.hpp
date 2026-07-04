@@ -1,16 +1,15 @@
 #ifndef RECOVERY_MANAGER_HPP
 #define RECOVERY_MANAGER_HPP
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "freertos/task.h"
-#include "freertos/FreeRTOS.h"
 
 
 class RecoveryManager {
 public:
     RecoveryManager();
-    void begin();
 
     // 依照邏輯表格設定 IO 狀態
     void deployDrogue();        // 副傘部署 (P8): 1, 1, 1

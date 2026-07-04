@@ -21,12 +21,15 @@ public:
         SensorType type;
     };
 
-    SensorManager(InterCoreComm* comm, KalmanFilter* kalman); // 透過建構子注入通訊與濾波物件
+    SensorManager(InterCoreComm* comm, KalmanFilter* kalman);
     void begin();
 
     void enableIcm();  void disableIcm();
     void enableBmp();  void disableBmp();
     void enableGps();  void disableGps();
+
+    HealthMonitor& getHealthMonitor() { return _kalman->getHealthMonitor(); }
+    KalmanFilter* getKalmanFilter() { return _kalman; }
 
     static void taskWrapper(void* pvParameters);
 
@@ -43,13 +46,30 @@ private:
     bool _bmpActive;
     bool _gpsActive;
 
-    InterCoreComm* _comm;     // 儲存通訊物件指標
-    KalmanFilter* _kalman;    // 儲存濾波物件指標
+    InterCoreComm* _comm;
+    KalmanFilter* _kalman;
     TaskHandle_t _icmTaskHandle;
     TaskHandle_t _bmpTaskHandle;
     TaskHandle_t _gpsTaskHandle;
 
-    SemaphoreHandle_t _i2cMutex; // I2C 互斥鎖
+    SemaphoreHandle_t _i2cMutex;
+
+    struct BmpCalibrationData {
+        double t1, t2, t3;
+        double p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
+    } _bmpCalib;
+
+    bool _icmInitialized = false;
+    bool _bmpInitialized = false;
+
+#ifdef ESP_PLATFORM
+    esp_err_t i2cWriteReg(uint8_t devAddr, uint8_t regAddr, uint8_t val);
+    esp_err_t i2cReadRegs(uint8_t devAddr, uint8_t regAddr, uint8_t* readBuf, size_t len);
+#endif
+    bool initIcm20948();
+    bool initBmp388();
+    double compensateTemp(double uncomp_temp);
+    double compensatePress(double uncomp_press, double t_lin);
 };
 
 #endif

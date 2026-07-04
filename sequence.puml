@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Ground Station" as GS
+participant "SensorManager" as SM
+participant "KalmanFilter" as KF
+participant "HealthMonitor" as HM
+participant "InterCoreComm" as ICC
+participant "DataManager" as DM
+participant "StateMachine" as SMC
+participant "RecoveryManager" as RM
+participant "StorageCommManager" as SCM
+
+== 初始化階段 ==
+
+[-> SMC : begin()
+SMC -> SCM : begin(stateQueue)
+SMC -> SM : begin()
+SMC -> DM : begin()
+
+== 數據採集與處理循環 (Core 0) ==
+
+loop 每 20ms ~ 200ms
+    SM -> KF : updateImu/Bmp/Gps(rawData)
+    activate KF
+    KF -> HM : isImu/Bmp/GpsHealthy()
+    HM --> KF : status
+    
+    KF -> KF : 執行濾波演算法
+    
+    KF -> ICC : sendKalmanData(filteredData)
+    deactivate KF
+    
+    SM -> ICC : sendRawData(rawData)
+end
+
+== 數據分發與決策 (Core 1) ==
+
+loop 持續輪詢 ICC
+    DM -> ICC : receiveRaw/KalmanData()
+    ICC --> DM : data
+    
+    DM -> DM : updateBuffer(data)
+    
+    alt 緩衝區滿 (256 Bytes)
+        DM -> SCM : saveToStorage(buffer)
+        DM -> SCM : sendViaRadio(buffer)
+        SCM -> GS : [Radio Link] Telemetry
+    end
+    
+    DM -> SMC : processImu/KalmanForTrigger(data)
+    activate SMC
+    
+    opt 觸發狀態切換條件 (例如：偵測到頂點 Apogee)
+        SMC -> SMC : transitionTo(newState)
+        SMC -> RM : deployDrogue() / deployMain()
+        RM -> RM : 驅動硬體 IO (點火/伺服馬達)
+        SMC -> ICC : sendLog("ACTION: Deployed")
+    end
+    deactivate SMC
+    
+    DM -> ICC : returnData(item)
+end
+
+== 遠端指令干預 ==
+
+GS -> SCM : [Radio Link] Command (Force Terminate)
+SCM -> SMC : pushState(FLIGHT_P12_TERMINATE) via Queue
+SMC -> RM : powerOffSystem()
+
+@enduml

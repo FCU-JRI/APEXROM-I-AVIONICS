@@ -1,13 +1,9 @@
 #include "StorageCommManager.hpp"
 #include "esp_log.h"
 #include "freertos/task.h"
+#include <stdio.h>
 
-// 注意：我們不需要 include StateMachine.hpp，只需要知道 StateEvent 的結構
-// 為了避免重複定義，我們可以使用 extern 或直接在 .cpp 裡定義一個相容的指令格式
-struct RawStateEvent {
-    uint8_t state;
-    TickType_t timestamp;
-};
+#include "../StateMachine/StateMachine.hpp"
 
 static const char* TAG = "StorageComm";
 
@@ -29,29 +25,70 @@ void StorageCommManager::radioRxTask(void* pvParameters) {
 }
 
 void StorageCommManager::processRxLogic() {
-    while (true) {
-        // 進入無線電操作臨界區
-        if (xSemaphoreTake(_radioMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
-            // 1. 模擬接收無線電硬體資料 (例如 UART 或 SPI)
-            // char cmd = wait_for_radio_data();
-            
-            // 2. 假設收到了「強制切換至狀態 12」的指令
-            bool forceTerminateReceived = false; // 這裡改為您的硬體判斷
+    // 緩衝讀取，直到收到換行符再解析
+    char buf[16];
+    int  idx = 0;
 
-            if (forceTerminateReceived && _smQueue != NULL) {
-                ESP_LOGW(TAG, "Remote Command: Force Terminate Mission!");
-                RawStateEvent evt = {12, xTaskGetTickCount()}; // 12 = FLIGHT_P12_TERMINATE
-                xQueueSend(_smQueue, &evt, 0);
-            }
-            
-            xSemaphoreGive(_radioMutex);
+    while (true) {
+        int c = getchar();
+
+        if (c == EOF) {
+            vTaskDelay(pdMS_TO_TICKS(20));
+            continue;
         }
-        
-        vTaskDelay(pdMS_TO_TICKS(100)); // 接收任務的輪詢頻率
+
+        if (c == '\n' || c == '\r') {
+            if (idx > 0) {
+                buf[idx] = '\0';
+                ESP_LOGI(TAG, "Simulated Serial RX: \"%s\"", buf);
+                dispatchCommand(buf);
+                idx = 0;
+            }
+        } else if (idx < (int)(sizeof(buf) - 1)) {
+            buf[idx++] = (char)c;
+        }
+    }
+}
+
+// ── 指令解析 ────────────────────────────────────────────────────────────────
+// 支援格式：
+//   "T" 或 "t"   → FLIGHT_P12_TERMINATE（backward-compat）
+//   "<數字>"      → 直接切換至對應 STATENUM（0–17）
+// ─────────────────────────────────────────────────────────────────────────────
+void StorageCommManager::dispatchCommand(const char* cmd) {
+    if (_smQueue == NULL) return;
+
+    // 'T' / 't' → Force Terminate (backward-compat)
+    if ((cmd[0] == 'T' || cmd[0] == 't') && cmd[1] == '\0') {
+        ESP_LOGW(TAG, "Command: Force Terminate Mission!");
+        StateMachine::StateEvent evt = {FLIGHT_P12_TERMINATE, xTaskGetTickCount()};
+        xQueueSend(_smQueue, &evt, 0);
+        return;
+    }
+
+    // 數字字串 → 解析為 STATENUM
+    bool isNum = (cmd[0] != '\0');
+    for (int i = 0; cmd[i] != '\0'; i++) {
+        if (cmd[i] < '0' || cmd[i] > '9') { isNum = false; break; }
+    }
+
+    if (isNum) {
+        int stateNum = atoi(cmd);
+        if (stateNum >= 0 && stateNum <= 17) {
+            ESP_LOGW(TAG, "Command: Transition to State %d", stateNum);
+            StateMachine::StateEvent evt = {(STATENUM)stateNum, xTaskGetTickCount()};
+            xQueueSend(_smQueue, &evt, 0);
+        } else {
+            ESP_LOGE(TAG, "Command: Invalid state number %d (valid: 0-17)", stateNum);
+        }
+    } else {
+        ESP_LOGE(TAG, "Command: Unknown command \"%s\"", cmd);
     }
 }
 
 void StorageCommManager::sendViaRadio(const uint8_t* data, size_t len) {
+    // --- 原 RF 發送邏輯註解 ---
+    /*
     // 傳輸時獲取鎖，確保接收任務在此期間等待
     if (xSemaphoreTake(_radioMutex, portMAX_DELAY) == pdTRUE) {
         ESP_LOGD(TAG, "Radio TX Start: Sending %d bytes...", len);
@@ -62,6 +99,15 @@ void StorageCommManager::sendViaRadio(const uint8_t* data, size_t len) {
         ESP_LOGD(TAG, "Radio TX Finished.");
         xSemaphoreGive(_radioMutex);
     }
+    */
+
+    // --- 使用 Serial (stdout) 模擬發送資料 ---
+    ESP_LOGI(TAG, "Simulated Serial TX Start: Sending %d bytes...", (int)len);
+    printf("Simulated Radio TX Data: ");
+    for(size_t i = 0; i < len; i++) {
+        printf("%02X ", data[i]);
+    }
+    printf("\n");
 }
 
 void StorageCommManager::saveToStorage(const uint8_t* data, size_t len) {

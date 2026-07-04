@@ -1,0 +1,109 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+package "Core Logic" {
+    class StateMachine {
+        + stateQueue: QueueHandle_t
+        + permitKalmanFilter: SemaphoreHandle_t
+        - _state: STATENUM
+        - _sensors: SensorManager*
+        - _recovery: RecoveryManager*
+        - _comm: InterCoreComm*
+        - _dataManager: DataManager*
+        + begin()
+        + transitionTo(newState: STATENUM)
+        + processImuForTrigger(...)
+        + processKalmanForTrigger(...)
+        - stateMachineTask()
+    }
+
+    class DataManager {
+        - _comm: InterCoreComm&
+        - _sm: StateMachine&
+        - _scm: StorageCommManager&
+        + begin()
+        + getBuffer256(out, len)
+        - processRawData()
+        - processKalmanData()
+    }
+}
+
+package "Hardware & Sensors" {
+    class SensorManager {
+        - _comm: InterCoreComm*
+        - _kalman: KalmanFilter*
+        - _health: HealthMonitor
+        + begin()
+        + enableIcm()
+        + enableBmp()
+        + enableGps()
+        + getHealthMonitor(): HealthMonitor&
+        - icm20948Task()
+        - bmp388Task()
+    }
+
+    class RecoveryManager {
+        + begin()
+        + deployDrogue()
+        + deployMain()
+        + powerOffSystem()
+        - applyLogic(io27, io14, io5)
+    }
+}
+
+package "Services" {
+    class InterCoreComm {
+        - _rawRingBuf: RingbufHandle_t
+        - _kalmanRingBuf: RingbufHandle_t
+        + sendRawImu(...)
+        + sendKalmanAltitude(...)
+        + receiveRawData(): void*
+        + receiveKalmanData(): void*
+    }
+
+    class KalmanFilter {
+        - _q[4]: float
+        - _x_alt[3]: float
+        + updateImu(...)
+        + updateBmp(...)
+        + getAltitude(...)
+        - predict(...)
+    }
+
+    class HealthMonitor {
+        - _imu: SensorStatus
+        - _bmp: SensorStatus
+        - _gps: SensorStatus
+        + updateImuHealth(...)
+        + updateBmpHealth(...)
+        + updateGpsHealth(...)
+        + isImuHealthy(): bool
+        + isBmpHealthy(): bool
+        + isGpsHealthy(): bool
+    }
+
+    class StorageCommManager {
+        - _smQueue: QueueHandle_t
+        + begin(smQueue)
+        + sendViaRadio(data, len)
+        + saveToStorage(data, len)
+    }
+}
+
+' Relationships
+StateMachine o-- SensorManager
+StateMachine o-- RecoveryManager
+StateMachine o-- InterCoreComm
+StateMachine o-- DataManager
+
+DataManager o-- InterCoreComm
+DataManager o-- StateMachine
+DataManager o-- StorageCommManager
+
+SensorManager *-- HealthMonitor
+SensorManager o-- InterCoreComm
+SensorManager o-- KalmanFilter
+
+@enduml

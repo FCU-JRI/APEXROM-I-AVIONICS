@@ -1,0 +1,134 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+package "Core 0" {
+
+    class SensorManager {
+        - _comm: InterCoreComm*
+        - _kalman: KalmanFilter*
+        + begin()
+        + enableIcm()
+        + enableBmp()
+        + enableGps()
+        - icm20948Task()
+        - bmp388Task()
+        - maxM10sTask()
+    }
+
+    class KalmanFilter {
+        - _health: HealthMonitor*
+        - MadgwickQuaternionUpdate(...)
+        - predictAltitude(...)
+        - normalizeQuaternion()
+        - saveToNVM();
+        - loadFromNVM(); 
+        + updateImu(...);
+        + updateBmp(...);
+        + updateGps(...);
+        + getQuaternion(...);
+        + getGps(...);
+        + getAltitude(...);
+    }
+
+    class HealthMonitor {
+        + isImuHealthy(...): bool
+        + isBmpHealthy(...): bool
+        + isGPSHealthy(...): bool
+    }
+}
+
+package "Core Logic" {
+    
+    class StateMachine {
+        + stateQueue: QueueHandle_t
+        + permitKalmanFilter: SemaphoreHandle_t
+        - _state: STATENUM
+        - _sensors: SensorManager*
+        - _recovery: RecoveryManager*
+        - _comm: InterCoreComm*
+        - _dataManager: DataManager*
+        + begin()
+        + transitionTo(newState: STATENUM)
+        + processImuForTrigger(...)
+        + processKalmanForTrigger(...)
+        - stateMachineTask()
+    }
+
+    
+}
+
+package "Hardware" {
+    
+    class StorageCommManager {
+        - _smQueue: QueueHandle_t
+        - _reTranNumberQueue: QueueHandle_t
+        - processRxLogic() 
+        - reTranTask()
+        - rxTask()
+        + begin(smQueue)
+        + sendViaRadio(data, len)
+        + saveToStorage(data, len)
+    }
+
+    class RecoveryManager {
+        + deployDrogue()
+        + deployMain()
+        + powerOffSystem()
+        - applyLogic(io27, io14, io5)
+    }
+}
+
+package "Services" {
+
+    class DataManager {
+        - _comm: InterCoreComm&
+        - _sm: StateMachine&
+        - _scm: StorageCommManager&
+        + begin()
+        + getBuffer256(out, len)
+        + getHealthMonitor(): HealthMonitor&
+        - processRawData()
+        - processKalmanData()
+        - rawDataTask()
+        - kalmanDataTask()
+    }
+
+    class InterCoreComm {
+        + begin()
+        + sendRawImu(...)
+        + sendRawBmp(...)
+        + sendRawGps(...)
+        + sendLog(...)
+
+        + sendKalmanQuaternion(...)
+        + sendKalmanGps(...)
+        + sendKalmanAltitude(...)
+
+        + *receiveRawData(...)
+        + returnRawData(...)
+
+        + *receiveKalmanData(...)
+        + returnKalmanData(...)
+    }
+
+    
+
+    
+}
+
+' Relationships
+StateMachine o-- SensorManager
+StateMachine o-- RecoveryManager
+StateMachine o-- InterCoreComm
+
+DataManager o-- InterCoreComm
+DataManager o-- StateMachine
+DataManager o-- StorageCommManager
+
+SensorManager o-- KalmanFilter
+KalmanFilter *-- HealthMonitor
+KalmanFilter o-- InterCoreComm
+
+@enduml

@@ -23,6 +23,7 @@ private:
 
     static void radioRxTask(void* pvParameters);
     void processRxLogic();
+    void dispatchCommand(const char* cmd); // 解析並派送一行指令
 };
 
 #endif

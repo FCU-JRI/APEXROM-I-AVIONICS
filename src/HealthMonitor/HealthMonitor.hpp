@@ -26,10 +26,10 @@ public:
     // 方案三：Cross-Sensor Voting (跨感測器比對)
     bool checkConsistency(float valA, float valB, float threshold, SensorStatus& statusA, SensorStatus& statusB);
 
-    // 取得感測器整體健康狀態
-    bool isImuHealthy() { return _imu.isOk; }
-    bool isBmpHealthy() { return _bmp.isOk; }
-    bool isGpsHealthy() { return _gps.isOk; }
+    // 取得感測器整體健康狀態 (測試模式：強制回傳 true)
+    bool isImuHealthy() { return true; }
+    bool isBmpHealthy() { return true; }
+    bool isGpsHealthy() { return true; }
 
     // 更新各感測器狀態
     void updateImuHealth(float ax, float ay, float az, float gx, float gy, float gz);

@@ -23,18 +23,18 @@ extern "C" void app_main(void) {
     printf("=== Rocket Avionics System Starting ===\n");
 
     // 2. 建立通訊與濾波物件 (基礎層)
-    InterCoreComm* comm = new InterCoreComm();
-    KalmanFilter* kalman = new KalmanFilter();
+    static InterCoreComm* comm = new InterCoreComm();
     comm->begin();
+    static KalmanFilter* kalman = new KalmanFilter(comm);
 
     // 3. 建立執行物件 (管理層)
-    RecoveryManager* recovery = new RecoveryManager();
-    SensorManager* sensors = new SensorManager(comm, kalman);
-    StorageCommManager* scm = new StorageCommManager();
+    static RecoveryManager* recovery = new RecoveryManager();
+    static SensorManager* sensors = new SensorManager(comm, kalman);
+    static StorageCommManager* scm = new StorageCommManager();
     
     // 4. 建立核心邏輯 (決策層)
-    StateMachine* sm = new StateMachine(sensors, recovery, comm);
-    DataManager* dm = new DataManager(*comm, *sm, *scm);
+    static StateMachine* sm = new StateMachine(sensors, recovery, comm);
+    static DataManager* dm = new DataManager(*comm, *sm, *scm);
     
     // 連結決策層與管理層
     sm->setDataManager(dm);
@@ -45,9 +45,12 @@ extern "C" void app_main(void) {
     dm->begin();
     sm->begin();
 
+    // 預先開啟感測器，以便在地面端就能接收數據與進行健康檢查
+    sensors->enableIcm();
+    sensors->enableBmp();
+    sensors->enableGps();
+
     printf("=== All Systems Operational ===\n");
     
-    while(1) {
-        vTaskDelay(portMAX_DELAY);
-    }
+    return;
 }

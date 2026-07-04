@@ -2,16 +2,17 @@
 #define STATE_MACHINE
 
 #include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "freertos/semphr.h"
 #include "freertos/queue.h"
-#include "freertos/task.h"
+
 #include "../Sensors/Sensors.hpp"
 #include "../Recovery/RecoveryManager.hpp"
 #include "../Communication/InterCoreComm.hpp"
 
 class DataManager; // 前向宣告
 
-enum STATENUM {
+enum STATENUM : uint32_t {
     STBY_IDLE ,    
     STBY_BIT  ,           
 
@@ -68,7 +69,8 @@ private:
     SensorManager* _sensors;
     RecoveryManager* _recovery;
     InterCoreComm* _comm;
-    DataManager* _dataManager; // 新增 DataManager 指標
+    DataManager* _dataManager;
+
     TaskHandle_t _taskHandle;
 
     float _startTime; // 紀錄動力上升開始時間 (秒)

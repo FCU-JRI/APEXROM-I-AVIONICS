@@ -17,6 +17,7 @@ enum SensorDataType : uint8_t {
 // 2. 定義共用標頭
 struct SensorPacketHeader {
     SensorDataType type;
+    uint8_t pad[3];    // 明確補齊 3 bytes，確保 Python 解析結果固定為 0x00
     TickType_t timestamp;
 };
 
@@ -42,13 +43,14 @@ struct LogData {
 
 // 4. Kalman 資料型別與標頭
 enum KalmanDataType : uint8_t {
-    KALMAN_TYPE_QUATERNION,
-    KALMAN_TYPE_GPS,
-    KALMAN_TYPE_ALTITUDE
+    KALMAN_TYPE_QUATERNION = 10,
+    KALMAN_TYPE_GPS = 11,
+    KALMAN_TYPE_ALTITUDE = 12
 };
 
 struct KalmanPacketHeader {
     KalmanDataType type;
+    uint8_t pad[3];    // 明確補齊 3 bytes，確保 Python 解析結果固定為 0x00
     TickType_t timestamp;
 };
 
