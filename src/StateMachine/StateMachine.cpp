@@ -241,11 +241,14 @@ void StateMachine::processKalmanForTrigger(float alt, float vz, float az) {
 
 
 void StateMachine::processImuForTrigger(float ax, float ay, float az, float gx, float gy, float gz) {
+    // 移除從 STBY_IDLE 自動觸發到點火狀態的邏輯，現在必須透過手動指令切換到 7 (FLIGHT_P5_IGNITION)
+    /*
     if (_state == STBY_IDLE && az > 19.6f) {
         _comm->sendLogEvent(EVT_TRIG_LAUNCH_G_FORCE);
         pushState(STBY_BIT);
         pushState(FLIGHT_P5_IGNITION);
     }
+    */
 }
 
 void StateMachine::updateGpsPosition(double lat, double lon) {
