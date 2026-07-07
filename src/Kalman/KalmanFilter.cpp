@@ -99,8 +99,17 @@ void KalmanFilter::updateImu(float ax, float ay, float az, float gx, float gy, f
     _lastMicros = now;
     if (dt <= 0 || dt > 0.5f) dt = 0.01f;
 
-    // 使用 Madgwick 演算法更新四元數姿態
-    MadgwickQuaternionUpdate(ax, ay, az, gx, gy, gz, mx, my, mz, dt);
+    // 計算總加速度大小 (轉換為 G)
+    float acc_magnitude_g = sqrtf(ax*ax + ay*ay + az*az) / 9.80665f;
+    
+    // 只有當總加速度接近 1G 時（例如 0.8G ~ 1.2G），才允許加速度計參與姿態修正
+    if (abs(acc_magnitude_g - 1.0f) < 0.2f) {
+        // 執行完整的 Madgwick (包含陀螺儀 + 加速度計梯度下降)
+        MadgwickQuaternionUpdate(ax, ay, az, gx, gy, gz, mx, my, mz, dt);
+    } else {
+        // 在 High-G 或 Near-Zero-G 狀態下，關閉加速度計修正，退化為「純陀螺儀四元數積分」
+        MadgwickQuaternionUpdateGyroOnly(gx, gy, gz, dt);
+    }
 
     float qw = _q[0], qx = _q[1], qy = _q[2], qz = _q[3];
     _az_world = 2.0f*(qx*qz - qw*qy)*ax + 2.0f*(qy*qz + qw*qx)*ay + (qw*qw - qx*qx - qy*qy + qz*qz)*az - 9.80665f;
@@ -262,4 +271,28 @@ void KalmanFilter::getAltitude(float& alt, float& vz, float& az) { alt=_x_alt[0]
 void KalmanFilter::normalizeQuaternion() {
     float mag = sqrtf(_q[0]*_q[0] + _q[1]*_q[1] + _q[2]*_q[2] + _q[3]*_q[3]);
     _q[0] /= mag; _q[1] /= mag; _q[2] /= mag; _q[3] /= mag;
+}
+
+void KalmanFilter::MadgwickQuaternionUpdateGyroOnly(float gx, float gy, float gz, float dt) {
+    float q1 = _q[0], q2 = _q[1], q3 = _q[2], q4 = _q[3];
+    
+    // 計算四元數隨時間的變化率 (Quaternion derivative)
+    float qDot1 = 0.5f * (-q2 * gx - q3 * gy - q4 * gz);
+    float qDot2 = 0.5f * ( q1 * gx + q3 * gz - q4 * gy);
+    float qDot3 = 0.5f * ( q1 * gy - q2 * gz + q4 * gx);
+    float qDot4 = 0.5f * ( q1 * gz + q2 * gy - q3 * gx);
+    
+    // 積分得出新的四元數
+    q1 += qDot1 * dt;
+    q2 += qDot2 * dt;
+    q3 += qDot3 * dt;
+    q4 += qDot4 * dt;
+    
+    // 歸一化
+    float norm = sqrtf(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
+    if (norm == 0.0f) return;
+    _q[0] = q1 / norm;
+    _q[1] = q2 / norm;
+    _q[2] = q3 / norm;
+    _q[3] = q4 / norm;
 }

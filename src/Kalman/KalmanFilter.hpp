@@ -55,6 +55,7 @@ private:
     // 內部方法
     void predictAltitude(float dt);
     void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float dt);
+    void MadgwickQuaternionUpdateGyroOnly(float gx, float gy, float gz, float dt);
     void normalizeQuaternion();
 
     // NVM 儲存與讀取
