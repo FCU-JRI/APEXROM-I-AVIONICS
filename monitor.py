@@ -50,6 +50,11 @@ _ser_global = None  # 由 main() 設定，供 ws_handler 轉發指令至 Serial
 # STATENUM 合法範圍（對應 StateMachine.hpp enum）
 _VALID_STATE_IDS = set(range(18))  # 0–17
 
+def clean_float(val):
+    if math.isnan(val) or math.isinf(val):
+        return 0.0
+    return val
+
 async def ws_handler(websocket):
     """雙向 WebSocket handler：
     - 下行（FC→GND）：由 broadcast_ws 主動推送感測資料
@@ -75,21 +80,9 @@ async def ws_handler(websocket):
     finally:
         ws_clients.discard(websocket)
 
-def clean_nans(obj):
-    if isinstance(obj, dict):
-        return {k: clean_nans(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_nans(v) for v in obj]
-    elif isinstance(obj, float):
-        if math.isnan(obj) or math.isinf(obj):
-            return None
-        return obj
-    return obj
-
 async def broadcast_ws(batch_data):
     if ws_clients:
-        clean_batch = clean_nans(batch_data)
-        msg = json.dumps({"batch": clean_batch, "status": "0-0", "pkt": len(clean_batch)})
+        msg = json.dumps({"batch": batch_data, "status": "0-0", "pkt": len(batch_data)})
         await asyncio.gather(*[client.send(msg) for client in ws_clients])
 
 async def _ws_main():
@@ -101,104 +94,132 @@ async def _ws_main():
 def ws_server_thread():
     asyncio.run(_ws_main())
 
-def parse_rf_buffer(byte_data):
-    """
-    解析 ESP32 傳來的混合資料 Buffer (256 bytes 以內)。
-    資料結構會依照 InterCoreComm.hpp 的定義。
-    """
-    hex_dump = " ".join([f"{b:02X}" for b in byte_data])
-    print(f"  [RAW HEX] {hex_dump}")
-    
+def build_event_string(event_id, p1, p2, p3):
+    EVENT_MAP = {
+        1: f"State: {int(p1)} -> {int(p2)}",
+        2: f"[SM] Current State: {int(p1)}, Time: {p2:.2f}",
+        3: "EVENT: Powered flight start time recorded",
+        4: "ACTION: System Reset to STBY_IDLE",
+        5: "ACTION: Calibrating Gyro...",
+        6: "ACTION: Drogue Deployed",
+        7: "ACTION: Motor Sep & Main Chute",
+        8: "ACTION: Main Chute (No Sep)",
+        9: "EVENT: Mission Terminated",
+        10: "TRIGGER: Global Time Safety - Forcing Apogee (35s)",
+        11: "TRIGGER: Motor Thrust detected (IMU)",
+        12: "TRIGGER: Altitude gain detected (BMP Backup)",
+        13: "TRIGGER: Burnout detected (IMU)",
+        14: "TRIGGER: Burnout assumed (Time Backup)",
+        15: "TRIGGER: Apogee detected (Sensors)",
+        16: "TRIGGER: Descent detected",
+        17: "DECISION: GPS Failed, forcing Main Chute (Safety First)",
+        18: "TRIGGER: Launch G-force detected",
+        19: "ACTION: Gyro Calibration Started",
+        20: f"ACTION: Gyro Calib Done ({p1:.3f}, {p2:.3f}, {p3:.3f})",
+        21: "HW ERROR: ICM20948 (IMU) Init Failed",
+        22: "HW ERROR: BMP388 (Barometer) Init Failed",
+        23: "ACTION: BMP388 Calibration Completed",
+        24: f"ACTION: BMP388 Calib Params (T1={p1:.2f}, P1={p2:.2f})"
+    }
+    return EVENT_MAP.get(event_id, f"Unknown Event {event_id} ({p1:.2f}, {p2:.2f}, {p3:.2f})")
+
+rf_buffer = bytearray()
+
+def parse_rf_buffer():
+    global rf_buffer
     batch_data = []
     offset = 0
     parsed_count = 0
-    while offset < len(byte_data):
-        # 至少要能讀取 8 bytes 的標頭
-        if len(byte_data) - offset < 8:
-            # print(f"  [Debug] Buffer 剩餘 {len(byte_data) - offset} bytes，不足以讀取標頭，結束解析。")
-            break 
+    while offset < len(rf_buffer):
+        if len(rf_buffer) - offset < 8:
+            break # 不夠一個 header
         
-        # 讀取標頭：type (1 byte), padding (3 bytes), timestamp (4 bytes uint32)
-        pkt_type, timestamp = struct.unpack_from('<B3xI', byte_data, offset)
+        pkt_type, ts = struct.unpack_from('<B3xI', rf_buffer, offset)
         
-        if pkt_type == 0: # DATA_TYPE_IMU
-            if len(byte_data) - offset < 44: 
-                print(f"  [Debug] IMU 封包長度不足 (需要 44, 剩餘 {len(byte_data) - offset})")
-                break
-            ax, ay, az, gx, gy, gz, mx, my, mz = struct.unpack_from('<9f', byte_data, offset + 8)
-            print(f"  🔹 [IMU] {timestamp}ms: Acc=({ax:.2f}, {ay:.2f}, {az:.2f}) Gyro=({gx:.2f}, {gy:.2f}, {gz:.2f}) Mag=({mx:.2f}, {my:.2f}, {mz:.2f})")
-            batch_data.append({"type": "IMU", "ts": timestamp, "data": {"ax": ax, "ay": ay, "az": az, "gx": gx, "gy": gy, "gz": gz, "mx": mx, "my": my, "mz": mz}})
-            offset += 44
-            parsed_count += 1
-            
-        elif pkt_type == 1: # DATA_TYPE_BMP
-            if len(byte_data) - offset < 16: break
-            pressure, temp = struct.unpack_from('<2f', byte_data, offset + 8)
-            print(f"  🔹 [BMP] {timestamp}ms: Press={pressure:.2f}hPa, Temp={temp:.2f}C")
-            batch_data.append({"type": "BMP", "ts": timestamp, "data": {"pressure": pressure, "temp": temp}})
-            offset += 16
-            parsed_count += 1
-            
-        elif pkt_type == 2: # DATA_TYPE_GPS
-            # GPS 結構因 double 對齊 8 bytes，加上 padding 後大小為 32 bytes
-            if len(byte_data) - offset < 32: break
-            lat, lon, alt = struct.unpack_from('<ddf', byte_data, offset + 8)
-            print(f"  🔹 [GPS] {timestamp}ms: Lat={lat:.6f}, Lon={lon:.6f}, Alt={alt:.2f}m")
-            batch_data.append({"type": "GPS", "ts": timestamp, "data": {"lat": lat, "lon": lon, "alt": alt}})
-            offset += 32
-            parsed_count += 1
-            
-        elif pkt_type == 3: # DATA_TYPE_LOG
-            if len(byte_data) - offset < 72: break
-            msg = struct.unpack_from('<64s', byte_data, offset + 8)[0].decode('utf-8', errors='ignore').strip('\x00')
-            print(f"  📝 [LOG] {timestamp}ms: {msg}")
-            batch_data.append({"type": "LOG", "ts": timestamp, "data": {"msg": msg}})
-            offset += 72
-            parsed_count += 1
-            
-        elif pkt_type == 10: # KALMAN_TYPE_QUATERNION
-            if len(byte_data) - offset < 24: 
-                print(f"  [Debug] QUAT 封包長度不足 (需要 24, 剩餘 {len(byte_data) - offset})")
-                break
-            qw, qx, qy, qz = struct.unpack_from('<4f', byte_data, offset + 8)
-            print(f"  🚀 [QUAT] {timestamp}ms: w={qw:.3f}, x={qx:.3f}, y={qy:.3f}, z={qz:.3f}")
-            batch_data.append({"type": "KALMAN_QUATERNION", "ts": timestamp, "data": {"q": [qw, qx, qy, qz]}})
+        if pkt_type == 4: # DATA_TYPE_LOG
+            if len(rf_buffer) - offset < 24: break
+            event_id, p1, p2, p3 = struct.unpack_from('<B3xfff', rf_buffer, offset + 8)
+            msg = build_event_string(event_id, p1, p2, p3)
+            print(f"  📝 [LOG] {ts}ms: {msg}")
+            batch_data.append({"type": "LOG", "ts": ts, "data": {"msg": msg}})
             offset += 24
             parsed_count += 1
             
-        elif pkt_type == 11: # KALMAN_TYPE_GPS
-            if len(byte_data) - offset < 32: break
-            lat, lon, velN, velE = struct.unpack_from('<ddff', byte_data, offset + 8)
-            print(f"  🚀 [KF_GPS] {timestamp}ms: Lat={lat:.6f}, Lon={lon:.6f}, vN={velN:.2f}, vE={velE:.2f}")
-            batch_data.append({"type": "KALMAN_GPS", "ts": timestamp, "data": {"lat": lat, "lon": lon, "vN": velN, "vE": velE}})
+        elif pkt_type == 0: # PADDING
+            offset += 1
+            
+        elif pkt_type == 1: # DATA_TYPE_IMU
+            if len(rf_buffer) - offset < 44: break
+            ax, ay, az, gx, gy, gz, mx, my, mz = struct.unpack_from('<9f', rf_buffer, offset + 8)
+            ax, ay, az = clean_float(ax), clean_float(ay), clean_float(az)
+            gx, gy, gz = clean_float(gx), clean_float(gy), clean_float(gz)
+            mx, my, mz = clean_float(mx), clean_float(my), clean_float(mz)
+            print(f"  🔹 [IMU] {ts}ms: Acc=({ax:.2f}, {ay:.2f}, {az:.2f}) Gyro=({gx:.2f}, {gy:.2f}, {gz:.2f}) Mag=({mx:.2f}, {my:.2f}, {mz:.2f})")
+            batch_data.append({"type": "IMU", "ts": ts, "data": {"ax":ax, "ay":ay, "az":az, "gx":gx, "gy":gy, "gz":gz, "mx":mx, "my":my, "mz":mz}})
+            offset += 44
+            parsed_count += 1
+            
+        elif pkt_type == 2: # DATA_TYPE_BMP
+            if len(rf_buffer) - offset < 16: break
+            pressure, temp = struct.unpack_from('<2f', rf_buffer, offset + 8)
+            pressure, temp = clean_float(pressure), clean_float(temp)
+            print(f"  ☁️ [BMP] {ts}ms: Press={pressure:.2f}hPa, Temp={temp:.2f}°C")
+            batch_data.append({"type": "BMP", "ts": ts, "data": {"pressure": pressure, "temp": temp}})
+            offset += 16
+            parsed_count += 1
+            
+        elif pkt_type == 3: # DATA_TYPE_GPS
+            if len(rf_buffer) - offset < 32: break
+            lat, lon, alt = struct.unpack_from('<ddf', rf_buffer, offset + 8)
+            lat, lon, alt = clean_float(lat), clean_float(lon), clean_float(alt)
+            print(f"  📍 [GPS] {ts}ms: Lat={lat:.6f}, Lon={lon:.6f}, Alt={alt:.2f}m")
+            batch_data.append({"type": "GPS", "ts": ts, "data": {"lat": lat, "lon": lon, "alt": alt}})
             offset += 32
             parsed_count += 1
             
+        elif pkt_type == 10: # KALMAN_TYPE_QUATERNION
+            if len(rf_buffer) - offset < 24: break
+            qw, qx, qy, qz = struct.unpack_from('<ffff', rf_buffer, offset + 8)
+            qw, qx, qy, qz = clean_float(qw), clean_float(qx), clean_float(qy), clean_float(qz)
+            print(f"  [QUAT] {ts}ms: w={qw:.3f}, x={qx:.3f}, y={qy:.3f}, z={qz:.3f}")
+            batch_data.append({"type": "KALMAN_QUATERNION", "ts": ts, "data": {"q": [qw, qx, qy, qz]}})
+            offset += 24
+            parsed_count += 1
+            
         elif pkt_type == 12: # KALMAN_TYPE_ALTITUDE
-            if len(byte_data) - offset < 20: break
-            alt, vz, az = struct.unpack_from('<3f', byte_data, offset + 8)
-            print(f"  🚀 [KF_ALT] {timestamp}ms: Alt={alt:.2f}m, Vz={vz:.2f}m/s, Az={az:.2f}m/s²")
-            batch_data.append({"type": "KALMAN_ALTITUDE", "ts": timestamp, "data": {"alt": alt, "vz": vz, "az": az}})
+            if len(rf_buffer) - offset < 20: break
+            alt, vz, az = struct.unpack_from('<fff', rf_buffer, offset + 8)
+            alt, vz, az = clean_float(alt), clean_float(vz), clean_float(az)
+            print(f"  🚀 [KF_ALT] {ts}ms: Alt={alt:.2f}m, Vz={vz:.2f}m/s, Az={az:.2f}m/s²")
+            batch_data.append({"type": "KALMAN_ALTITUDE", "ts": ts, "data": {"alt":alt, "vz":vz, "az":az}})
             offset += 20
             parsed_count += 1
             
-        elif pkt_type == 0x00: # Padding from empty buffer
-            offset += 1
+        elif pkt_type == 11 or pkt_type == 13: # KALMAN_TYPE_POSITION (13), old GPS (11)
+            if len(rf_buffer) - offset < 32: break
+            lat, lon, velN, velE = struct.unpack_from('<ddff', rf_buffer, offset + 8)
+            lat, lon, velN, velE = clean_float(lat), clean_float(lon), clean_float(velN), clean_float(velE)
+            batch_data.append({"type": "KALMAN_POSITION" if pkt_type==13 else "KALMAN_GPS", "ts": ts, "data": {"lat":lat, "lon":lon, "vN":velN, "vE":velE}})
+            offset += 32
+            parsed_count += 1
             
         else:
-            print(f"  ❌ [UNKNOWN] Type ID: {pkt_type} at offset {offset}")
-            break # 格式未知的錯誤，停止解析這段 Buffer
+            print(f"  [UNKNOWN] Type ID: {pkt_type} at offset {offset}")
+            offset += 1 # 略過一個 byte 嘗試重新對齊
+            
+    # 從緩衝區移除已解析的部分
+    rf_buffer = rf_buffer[offset:]
     
     if parsed_count > 0:
-        print(f"  ✅ 解析完成：共 {parsed_count} 筆資料封包\n")
         if batch_data and ws_loop:
             asyncio.run_coroutine_threadsafe(broadcast_ws(batch_data), ws_loop)
 
 
 def read_from_port(ser):
+    global rf_buffer
     while True:
         try:
-            # 優先處理待發送指令 (保證單一執行緒存取 Serial)
+            # 優先處理待發送指令
             while not serial_cmd_queue.empty():
                 cmd = serial_cmd_queue.get_nowait()
                 ser.write(cmd)
@@ -207,14 +228,14 @@ def read_from_port(ser):
                 line = ser.readline().decode('utf-8', errors='ignore').strip()
                 
                 if "Simulated Radio TX Data:" in line:
-                    print(f"\n[📦 收到 RF 緩衝區封包]")
                     try:
                         hex_str = line.split("Simulated Radio TX Data:")[1].strip()
                         hex_list = hex_str.split()
                         byte_data = bytes([int(x, 16) for x in hex_list])
+                        rf_buffer.extend(byte_data)
                         
                         # 呼叫解析函式
-                        parse_rf_buffer(byte_data)
+                        parse_rf_buffer()
                     except Exception as e:
                         print(f"  -> [解析錯誤] {e}")
                 else:

@@ -65,6 +65,7 @@ function App() {
     const [histIdx,     setHistIdx]     = useState(0);
     const [history,     setHistory]     = useState([]);
     const [cmdLog,      setCmdLog]      = useState([]);
+    const [fcLogs,      setFcLogs]      = useState([]);
     const wsRef = useRef(null);
 
     const addCmdLog = useCallback((msg) => {
@@ -89,6 +90,13 @@ function App() {
                         // 攔截 LOG 封包，同步火箭端狀態
                         d.batch.forEach(b => {
                             if (b.type === "LOG" && b.data && b.data.msg) {
+                                console.log("LOG RECEIVED:", b.data.msg); // Debug
+                                const t = new Date().toLocaleTimeString('zh-TW', { hour12:false });
+                                let shortMsg = b.data.msg;
+                                shortMsg = shortMsg.replace(/\[SM\] Current State:\s*(\d+)(,\s*Time:\s*[\d.]+)?/, "STATE: $1");
+                                shortMsg = shortMsg.replace(/State:\s*(\d+)\s*->\s*(\d+)/, "$1 -> $2");
+                                setFcLogs(prev => [{ time: t, msg: shortMsg }, ...prev].slice(0, 5000));
+
                                 const transitionMatch = b.data.msg.match(/State:\s*\d+\s*->\s*(\d+)/);
                                 const currentMatch = b.data.msg.match(/\[SM\] Current State:\s*(\d+)/);
                                 if (transitionMatch) {
@@ -158,7 +166,7 @@ function App() {
     
     // GPS 是低頻資料，必須使用 getLastVal
     const gps    = getLastVal("KALMAN_GPS") ?? getLastVal("GPS") ?? { lat: 0, lon: 0 };
-    const fcLogs = view?.batch?.filter(b => b.type === "LOG").map(b => b.data.msg) ?? [];
+    
     
     const imu    = getLastVal("IMU");
     const bmp    = getLastVal("BMP");
@@ -240,25 +248,25 @@ function App() {
                         <div className="p-1 bg-cyan-900/10 border-b border-cyan-900/20 text-xs font-bold text-cyan-400 uppercase mb-1">Raw Sensor Telemetry</div>
                         <div className="grid grid-cols-3 gap-2">
                             <div className="flex flex-col gap-0.5">
-                                <SensorValue label="ACC_X" val={imu?.ax?.toFixed(2) ?? '0.00'} unit="g" />
-                                <SensorValue label="ACC_Y" val={imu?.ay?.toFixed(2) ?? '0.00'} unit="g" />
-                                <SensorValue label="ACC_Z" val={imu?.az?.toFixed(2) ?? '0.00'} unit="g" />
+                                <SensorValue label="ACC_X" val={imu?.ax?.toFixed(3) ?? '0.000'} unit="g" />
+                                <SensorValue label="ACC_Y" val={imu?.ay?.toFixed(3) ?? '0.000'} unit="g" />
+                                <SensorValue label="ACC_Z" val={imu?.az?.toFixed(3) ?? '0.000'} unit="g" />
                             </div>
                             <div className="flex flex-col gap-0.5">
-                                <SensorValue label="GYR_X" val={imu?.gx?.toFixed(1) ?? '0.0'} unit="°/s" />
-                                <SensorValue label="GYR_Y" val={imu?.gy?.toFixed(1) ?? '0.0'} unit="°/s" />
-                                <SensorValue label="GYR_Z" val={imu?.gz?.toFixed(1) ?? '0.0'} unit="°/s" />
+                                <SensorValue label="GYR_X" val={imu?.gx?.toFixed(3) ?? '0.000'} unit="°/s" />
+                                <SensorValue label="GYR_Y" val={imu?.gy?.toFixed(3) ?? '0.000'} unit="°/s" />
+                                <SensorValue label="GYR_Z" val={imu?.gz?.toFixed(3) ?? '0.000'} unit="°/s" />
                             </div>
                             <div className="flex flex-col gap-0.5">
-                                <SensorValue label="MAG_X" val={imu?.mx?.toFixed(1) ?? '0.0'} unit="uT" />
-                                <SensorValue label="MAG_Y" val={imu?.my?.toFixed(1) ?? '0.0'} unit="uT" />
-                                <SensorValue label="MAG_Z" val={imu?.mz?.toFixed(1) ?? '0.0'} unit="uT" />
+                                <SensorValue label="MAG_X" val={imu?.mx?.toFixed(3) ?? '0.000'} unit="uT" />
+                                <SensorValue label="MAG_Y" val={imu?.my?.toFixed(3) ?? '0.000'} unit="uT" />
+                                <SensorValue label="MAG_Z" val={imu?.mz?.toFixed(3) ?? '0.000'} unit="uT" />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-2 mt-1">
                              <div className="flex flex-col gap-0.5">
-                                <SensorValue label="BMP_PRES" val={bmp?.pressure?.toFixed(2) ?? '0.00'} unit="hPa" />
-                                <SensorValue label="BMP_TEMP" val={bmp?.temp?.toFixed(1) ?? '0.0'} unit="°C" />
+                                <SensorValue label="BMP_PRES" val={bmp?.pressure?.toFixed(3) ?? '0.000'} unit="hPa" />
+                                <SensorValue label="BMP_TEMP" val={bmp?.temp?.toFixed(3) ?? '0.000'} unit="°C" />
                              </div>
                              <div className="flex flex-col gap-0.5">
                                 <SensorValue label="GPS_LAT" val={gpsRaw?.lat?.toFixed(6) ?? '0.000000'} unit="°" />
@@ -283,7 +291,24 @@ function App() {
                         <div className="text-xs text-gray-600 mb-1 font-bold">FC EVENT LOGS</div>
                         {fcLogs.length === 0
                             ? <div className="text-gray-800 text-xs">— 尚無資料 —</div>
-                            : fcLogs.map((m,i) => <div key={i} className="text-cyan-900">[{new Date().toLocaleTimeString()}] {m}</div>)
+                            : (
+                                <table className="w-full text-left border-collapse text-xs">
+                                    <thead>
+                                        <tr className="border-b border-gray-700/50 text-gray-500">
+                                            <th className="py-1 pr-2 w-16">Time</th>
+                                            <th className="py-1">Event</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {fcLogs.map((log, i) => (
+                                            <tr key={i} className="border-b border-gray-800/30 hover:bg-gray-800/20">
+                                                <td className="py-1 pr-2 text-gray-500">{log.time}</td>
+                                                <td className="py-1 text-cyan-300">{log.msg}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )
                         }
                     </div>
 

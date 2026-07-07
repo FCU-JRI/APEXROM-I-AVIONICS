@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2026 Flight Computer - Event Log Dictionary</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 2rem;
+            margin: 0;
+        }
+        h1 {
+            color: #38bdf8;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+        p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background-color: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background-color: #0f172a;
+            color: #7dd3fc;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #334155;
+        }
+        .param {
+            color: #fbbf24;
+            font-family: monospace;
+            background-color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .type-event { color: #4ade80; font-weight: bold; }
+        .type-action { color: #60a5fa; font-weight: bold; }
+        .type-trigger { color: #f87171; font-weight: bold; }
+        .type-error { color: #fca5a5; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>FC Event Log Dictionary</h1>
+    <p>
+        為了大幅節省 LoRa 無線射頻頻寬，系統已將原本 64 Bytes 的純文字事件日誌 (String Log)<br>
+        壓縮為僅 16 Bytes 的二進位編碼 <code>[uint8_t event_id] + [float p1] + [float p2] + [float p3]</code>。<br>
+        地面站 (<code>monitor.py</code>) 收到後會自動查表並還原成下列的完整文字。
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="80">ID (DEC)</th>
+                <th width="200">事件名稱 (Macro)</th>
+                <th>還原文字格式 (Reconstructed String)</th>
+                <th>參數說明 (Parameters)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>EVT_STATE_TRANSITION</td>
+                <td>State: <span class="param">{p1}</span> -> <span class="param">{p2}</span></td>
+                <td>p1=舊狀態, p2=新狀態</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>EVT_SM_CURRENT_STATE</td>
+                <td>[SM] Current State: <span class="param">{p1}</span>, Time: <span class="param">{p2}</span></td>
+                <td>p1=目前狀態, p2=執行時間(秒)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>EVT_POWERED_FLIGHT_START</td>
+                <td><span class="type-event">EVENT:</span> Powered flight start time recorded</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>EVT_SYS_RESET</td>
+                <td><span class="type-action">ACTION:</span> System Reset to STBY_IDLE</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>EVT_CALIB_GYRO</td>
+                <td><span class="type-action">ACTION:</span> Calibrating Gyro...</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>EVT_DROGUE_DEPLOY</td>
+                <td><span class="type-action">ACTION:</span> Drogue Deployed</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>EVT_MOTOR_SEP_MAIN</td>
+                <td><span class="type-action">ACTION:</span> Motor Sep & Main Chute</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>EVT_MAIN_NO_SEP</td>
+                <td><span class="type-action">ACTION:</span> Main Chute (No Sep)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>EVT_MISSION_TERMINATED</td>
+                <td><span class="type-event">EVENT:</span> Mission Terminated</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>EVT_TRIG_FORCE_APOGEE</td>
+                <td><span class="type-trigger">TRIGGER:</span> Global Time Safety - Forcing Apogee (35s)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>EVT_TRIG_MOTOR_THRUST</td>
+                <td><span class="type-trigger">TRIGGER:</span> Motor Thrust detected (IMU)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>EVT_TRIG_ALT_GAIN</td>
+                <td><span class="type-trigger">TRIGGER:</span> Altitude gain detected (BMP Backup)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>EVT_TRIG_BURNOUT_IMU</td>
+                <td><span class="type-trigger">TRIGGER:</span> Burnout detected (IMU)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>EVT_TRIG_BURNOUT_TIME</td>
+                <td><span class="type-trigger">TRIGGER:</span> Burnout assumed (Time Backup)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td>EVT_TRIG_APOGEE_SENSORS</td>
+                <td><span class="type-trigger">TRIGGER:</span> Apogee detected (Sensors)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>EVT_TRIG_DESCENT</td>
+                <td><span class="type-trigger">TRIGGER:</span> Descent detected</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td>EVT_DECISION_GPS_FAIL_MAIN</td>
+                <td>DECISION: GPS Failed, forcing Main Chute (Safety First)</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td>EVT_TRIG_LAUNCH_G_FORCE</td>
+                <td><span class="type-trigger">TRIGGER:</span> Launch G-force detected</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>EVT_GYRO_CALIB_STARTED</td>
+                <td><span class="type-action">ACTION:</span> Gyro Calibration Started</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td>EVT_GYRO_CALIB_DONE</td>
+                <td><span class="type-action">ACTION:</span> Gyro Calib Done (<span class="param">{p1}</span>, <span class="param">{p2}</span>, <span class="param">{p3}</span>)</td>
+                <td>p1=Bias X, p2=Bias Y, p3=Bias Z</td>
+            </tr>
+            <tr>
+                <td>21</td>
+                <td>EVT_HW_ERROR_IMU</td>
+                <td><span class="type-error">HW ERROR:</span> ICM20948 (IMU) Init Failed</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>EVT_HW_ERROR_BMP</td>
+                <td><span class="type-error">HW ERROR:</span> BMP388 (Barometer) Init Failed</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

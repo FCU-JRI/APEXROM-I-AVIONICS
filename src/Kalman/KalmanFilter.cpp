@@ -53,7 +53,7 @@ void KalmanFilter::startGyroCalibration() {
     _calibratingGyro = true;
     _calibSamples = 0;
     _calibSum[0] = 0.0f; _calibSum[1] = 0.0f; _calibSum[2] = 0.0f;
-    if (_comm) _comm->sendLog("ACTION: Gyro Calibration Started");
+    if (_comm) _comm->sendLogEvent(EVT_GYRO_CALIB_STARTED);
 }
 
 void KalmanFilter::updateImu(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz) {
@@ -70,9 +70,7 @@ void KalmanFilter::updateImu(float ax, float ay, float az, float gx, float gy, f
             _calibratingGyro = false;
             saveToNVM();
             if (_comm) {
-                char msg[64];
-                snprintf(msg, sizeof(msg), "ACTION: Gyro Calib Done (%.3f, %.3f, %.3f)", _bias[0], _bias[1], _bias[2]);
-                _comm->sendLog(msg);
+                _comm->sendLogEvent(EVT_GYRO_CALIB_DONE, _bias[0], _bias[1], _bias[2]);
             }
         }
         return; 

@@ -8,10 +8,11 @@
 
 // 1. 定義資料型別
 enum SensorDataType : uint8_t {
-    DATA_TYPE_IMU,
-    DATA_TYPE_BMP,
-    DATA_TYPE_GPS,
-    DATA_TYPE_LOG
+    DATA_TYPE_PADDING = 0,
+    DATA_TYPE_IMU = 1,
+    DATA_TYPE_BMP = 2,
+    DATA_TYPE_GPS = 3,
+    DATA_TYPE_LOG = 4
 };
 
 // 2. 定義共用標頭
@@ -37,8 +38,38 @@ struct GpsData {
     float alt;
 };
 
+enum LogEventId : uint8_t {
+    EVT_STATE_TRANSITION = 1,
+    EVT_SM_CURRENT_STATE = 2,
+    EVT_POWERED_FLIGHT_START = 3,
+    EVT_SYS_RESET = 4,
+    EVT_CALIB_GYRO = 5,
+    EVT_DROGUE_DEPLOY = 6,
+    EVT_MOTOR_SEP_MAIN = 7,
+    EVT_MAIN_NO_SEP = 8,
+    EVT_MISSION_TERMINATED = 9,
+    EVT_TRIG_FORCE_APOGEE = 10,
+    EVT_TRIG_MOTOR_THRUST = 11,
+    EVT_TRIG_ALT_GAIN = 12,
+    EVT_TRIG_BURNOUT_IMU = 13,
+    EVT_TRIG_BURNOUT_TIME = 14,
+    EVT_TRIG_APOGEE_SENSORS = 15,
+    EVT_TRIG_DESCENT = 16,
+    EVT_DECISION_GPS_FAIL_MAIN = 17,
+    EVT_TRIG_LAUNCH_G_FORCE = 18,
+    EVT_GYRO_CALIB_STARTED = 19,
+    EVT_GYRO_CALIB_DONE = 20,
+    EVT_HW_ERROR_IMU = 21,
+    EVT_HW_ERROR_BMP = 22,
+    EVT_BMP_CALIB_COMPLETED = 23,
+    EVT_BMP_CALIB_PARAMS = 24
+};
+
 struct LogData {
-    char message[64];
+    uint8_t event_id;
+    float param1;
+    float param2;
+    float param3;
 };
 
 // 4. Kalman 資料型別與標頭
@@ -66,7 +97,7 @@ public:
     bool sendRawImu(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz);
     bool sendRawBmp(float pressure, float temp);
     bool sendRawGps(double lat, double lon, float alt);
-    bool sendLog(const char* msg);
+    bool sendLogEvent(uint8_t event_id, float p1 = 0, float p2 = 0, float p3 = 0);
 
     bool sendKalmanQuaternion(const float q[4]);
     bool sendKalmanGps(double lat, double lon, float velN, float velE);

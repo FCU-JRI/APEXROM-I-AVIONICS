@@ -80,7 +80,7 @@ void DataManager::processRawData() {
                     break;
                 case DATA_TYPE_LOG: {
                     LogData* data = (LogData*)((uint8_t*)item + sizeof(SensorPacketHeader));
-                    ESP_LOGI(TAG, "Log Record: %s", data->message);
+                    ESP_LOGI(TAG, "Log Record ID: %d, P1: %.2f", data->event_id, data->param1);
                     break;
                 }
                 default: break;
