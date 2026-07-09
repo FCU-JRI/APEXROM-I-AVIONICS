@@ -80,6 +80,7 @@ function App() {
         const connect = () => {
             if (!isMounted) return;
             const host = window.location.hostname || "localhost";
+            console.log(host);
             ws = new WebSocket(`ws://${host}:8765`);
             wsRef.current = ws;
             ws.onopen  = () => { if (isMounted) { setWsConnected(true);  addCmdLog("✅ 已連線至 Monitor WebSocket"); } };
