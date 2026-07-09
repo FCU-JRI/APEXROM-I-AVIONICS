@@ -16,6 +16,7 @@
 #define GPS_TX_PIN GPIO_NUM_17
 #define GPS_RX_PIN GPIO_NUM_16
 #define GPS_PPS_PIN GPIO_NUM_34
+#define BMP388_I2C_ADDRESS 0x76
 
 #define MINMEA_MAX_LENGTH 82
 
@@ -77,7 +78,7 @@ bool SensorManager::initBmp388() {
     uint8_t chip_id = 0;
     esp_err_t err = ESP_FAIL;
     for (int i=0; i<3; i++) {
-        err = i2cReadRegs(0x76, 0x00, &chip_id, 1);
+        err = i2cReadRegs(BMP388_I2C_ADDRESS, 0x00, &chip_id, 1);
         if (err == ESP_OK) break;
         vTaskDelay(pdMS_TO_TICKS(50));
     }
@@ -87,77 +88,61 @@ bool SensorManager::initBmp388() {
     }
 
     // Reset BMP388
-    if (i2cWriteReg(0x76, 0x7E, 0xB6) != ESP_OK) {
+    if (i2cWriteReg(BMP388_I2C_ADDRESS, 0x7E, 0xB6) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: Reset command error");
         return false;
     }
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(100));
+
+    uint8_t status;
+    i2cReadRegs(BMP388_I2C_ADDRESS, 0x03, &status, 1);
 
     // Read 21 bytes calibration data starting at register 0x31
     uint8_t calib_buf[21] = {0};
-    if (i2cReadRegs(0x76, 0x31, calib_buf, 21) != ESP_OK) {
+    if (i2cReadRegs(BMP388_I2C_ADDRESS, 0x31, calib_buf, 21) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: Read calibration error");
         return false;
     }
 
     #define CONCAT_BYTES(msb, lsb) ((uint16_t)(((uint16_t)(msb) << 8) | (uint16_t)(lsb)))
-
-    // Temperature coefficients
-    uint16_t raw_t1 = CONCAT_BYTES(calib_buf[1], calib_buf[0]);
-    uint16_t raw_t2 = CONCAT_BYTES(calib_buf[3], calib_buf[2]);
-    int8_t raw_t3 = (int8_t)calib_buf[4];
-
-    _bmpCalib.t1 = (double)raw_t1 / 0.00390625;      // raw_t1 / 2^-8
-    _bmpCalib.t2 = (double)raw_t2 / 1073741824.0;    // raw_t2 / 2^30
-    _bmpCalib.t3 = (double)raw_t3 / 281474976710656.0; // raw_t3 / 2^48
-
-    // Pressure coefficients
-    int16_t raw_p1 = (int16_t)CONCAT_BYTES(calib_buf[6], calib_buf[5]);
-    int16_t raw_p2 = (int16_t)CONCAT_BYTES(calib_buf[8], calib_buf[7]);
-    int8_t raw_p3 = (int8_t)calib_buf[9];
-    int8_t raw_p4 = (int8_t)calib_buf[10];
-    uint16_t raw_p5 = CONCAT_BYTES(calib_buf[12], calib_buf[11]);
-    uint16_t raw_p6 = CONCAT_BYTES(calib_buf[14], calib_buf[13]);
-    int8_t raw_p7 = (int8_t)calib_buf[15];
-    int8_t raw_p8 = (int8_t)calib_buf[16];
-    int16_t raw_p9 = (int16_t)CONCAT_BYTES(calib_buf[18], calib_buf[17]);
-    int8_t raw_p10 = (int8_t)calib_buf[19];
-    int8_t raw_p11 = (int8_t)calib_buf[20];
+    
+    _bmpCalib.par_t1 = CONCAT_BYTES(calib_buf[1], calib_buf[0]);
+    _bmpCalib.par_t2 = CONCAT_BYTES(calib_buf[3], calib_buf[2]);
+    _bmpCalib.par_t3 = (int8_t)calib_buf[4];
+    _bmpCalib.par_p1 = (int16_t)CONCAT_BYTES(calib_buf[6], calib_buf[5]);
+    _bmpCalib.par_p2 = (int16_t)CONCAT_BYTES(calib_buf[8], calib_buf[7]);
+    _bmpCalib.par_p3 = (int8_t)calib_buf[9];
+    _bmpCalib.par_p4 = (int8_t)calib_buf[10];
+    _bmpCalib.par_p5 = CONCAT_BYTES(calib_buf[12], calib_buf[11]);
+    _bmpCalib.par_p6 = CONCAT_BYTES(calib_buf[14], calib_buf[13]);
+    _bmpCalib.par_p7 = (int8_t)calib_buf[15];
+    _bmpCalib.par_p8 = (int8_t)calib_buf[16];
+    _bmpCalib.par_p9 = (int16_t)CONCAT_BYTES(calib_buf[18], calib_buf[17]);
+    _bmpCalib.par_p10 = (int8_t)calib_buf[19];
+    _bmpCalib.par_p11 = (int8_t)calib_buf[20];
 
     #undef CONCAT_BYTES
 
-    _bmpCalib.p1 = ((double)raw_p1 - 16384.0) / 1048576.0;
-    _bmpCalib.p2 = ((double)raw_p2 - 16384.0) / 536870912.0;
-    _bmpCalib.p3 = (double)raw_p3 / 4294967296.0;
-    _bmpCalib.p4 = (double)raw_p4 / 137438953472.0;
-    _bmpCalib.p5 = (double)raw_p5 / 0.125;
-    _bmpCalib.p6 = (double)raw_p6 / 64.0;
-    _bmpCalib.p7 = (double)raw_p7 / 256.0;
-    _bmpCalib.p8 = (double)raw_p8 / 32768.0;
-    _bmpCalib.p9 = (double)raw_p9 / 281474976710656.0;
-    _bmpCalib.p10 = (double)raw_p10 / 281474976710656.0;
-    _bmpCalib.p11 = (double)raw_p11 / 36893488147419103232.0;
-
-    // Configure ODR: 50Hz (0x02)
-    if (i2cWriteReg(0x76, 0x1D, 0x02) != ESP_OK) {
+    // Configure ODR: 25Hz (0x03) (內部硬體取樣頻率)
+    if (i2cWriteReg(BMP388_I2C_ADDRESS, 0x1D, 0x03) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: ODR config error");
         return false;
     }
 
-    // Configure OSR: Temp x8 (011), Press x16 (100) -> 0x1C
-    if (i2cWriteReg(0x76, 0x1C, 0x1C) != ESP_OK) {
+    // Configure OSR: OSR_p = 16 (0x04), OSR_t = 2 (0x01) -> 0x0C (Ultra high resolution)
+    if (i2cWriteReg(BMP388_I2C_ADDRESS, 0x1C, 0x0C) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: OSR config error");
         return false;
     }
 
-    // Configure Filter: coef 3 (010 << 1) -> 0x04
-    if (i2cWriteReg(0x76, 0x1F, 0x04) != ESP_OK) {
+    // Configure Filter: IIR filter coeff 15 (100 << 1) -> 0x08
+    if (i2cWriteReg(BMP388_I2C_ADDRESS, 0x1F, 0x08) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: Filter config error");
         return false;
     }
 
-    // Power Control: Enable Temp, Press, Normal Mode
-    if (i2cWriteReg(0x76, 0x1B, 0x33) != ESP_OK) {
+    // Power Control: Enable Temp, Press, Normal Mode -> 0x33
+    if (i2cWriteReg(BMP388_I2C_ADDRESS, 0x1B, 0x33) != ESP_OK) {
         ESP_LOGE("Sensors", "BMP388 Init Failed: Power control error");
         return false;
     }
@@ -171,36 +156,66 @@ bool SensorManager::initBmp388() {
 #endif
 }
 
-double SensorManager::compensateTemp(double uncomp_temp) {
-    double partial_data1 = uncomp_temp - _bmpCalib.t1;
-    double partial_data2 = partial_data1 * _bmpCalib.t2;
-    return partial_data2 + (partial_data1 * partial_data1) * _bmpCalib.t3;
+int64_t SensorManager::compensateTemp(uint32_t uncomp_temp) {
+    int64_t partial_data1;
+    int64_t partial_data2;
+    int64_t partial_data3;
+    int64_t partial_data4;
+    int64_t partial_data5;
+    int64_t partial_data6;
+    int64_t comp_temp;
+
+    partial_data1 = ((int64_t)uncomp_temp - (256 * _bmpCalib.par_t1));
+    partial_data2 = _bmpCalib.par_t2 * partial_data1;
+    partial_data3 = (partial_data1 * partial_data1);
+    partial_data4 = (int64_t)partial_data3 * _bmpCalib.par_t3;
+    partial_data5 = ((int64_t)(partial_data2 * 262144) + partial_data4);
+    partial_data6 = partial_data5 / 4294967296;
+
+    _bmpCalib.t_lin = partial_data6;
+    comp_temp = (int64_t)((partial_data6 * 25) / 16384);
+
+    return comp_temp; 
 }
 
-double SensorManager::compensatePress(double uncomp_press, double t_lin) {
-    double partial_data1;
-    double partial_data2;
-    double partial_data3;
-    double partial_data4;
-    double partial_out1;
-    double partial_out2;
+uint64_t SensorManager::compensatePress(uint32_t uncomp_press) {
+    int64_t partial_data1;
+    int64_t partial_data2;
+    int64_t partial_data3;
+    int64_t partial_data4;
+    int64_t partial_data5;
+    int64_t partial_data6;
+    int64_t offset;
+    int64_t sensitivity;
+    uint64_t comp_press;
 
-    partial_data1 = _bmpCalib.p6 * t_lin;
-    partial_data2 = _bmpCalib.p7 * (t_lin * t_lin);
-    partial_data3 = _bmpCalib.p8 * (t_lin * t_lin * t_lin);
-    partial_out1 = _bmpCalib.p5 + partial_data1 + partial_data2 + partial_data3;
+    partial_data1 = _bmpCalib.t_lin * _bmpCalib.t_lin;
+    partial_data2 = partial_data1 / 64;
+    partial_data3 = (partial_data2 * _bmpCalib.t_lin) / 256;
+    partial_data4 = (_bmpCalib.par_p8 * partial_data3) / 32;
+    partial_data5 = (_bmpCalib.par_p7 * partial_data1) * 16;
+    partial_data6 = (_bmpCalib.par_p6 * _bmpCalib.t_lin) * 4194304;
+    offset = (_bmpCalib.par_p5 * 140737488355328LL) + partial_data4 + partial_data5 + partial_data6;
+    
+    partial_data2 = (_bmpCalib.par_p4 * partial_data3) / 32;
+    partial_data4 = (_bmpCalib.par_p3 * partial_data1) * 4;
+    partial_data5 = (_bmpCalib.par_p2 - 16384) * _bmpCalib.t_lin * 2097152;
+    sensitivity = ((_bmpCalib.par_p1 - 16384) * 70368744177664LL) + partial_data2 + partial_data4 + partial_data5;
+    
+    partial_data1 = (sensitivity / 16777216) * uncomp_press;
+    partial_data2 = _bmpCalib.par_p10 * _bmpCalib.t_lin;
+    partial_data3 = partial_data2 + (65536 * _bmpCalib.par_p9);
+    partial_data4 = (partial_data3 * uncomp_press) / 8192;
 
-    partial_data1 = _bmpCalib.p2 * t_lin;
-    partial_data2 = _bmpCalib.p3 * (t_lin * t_lin);
-    partial_data3 = _bmpCalib.p4 * (t_lin * t_lin * t_lin);
-    partial_out2 = uncomp_press * (_bmpCalib.p1 + partial_data1 + partial_data2 + partial_data3);
+    partial_data5 = (uncomp_press * (partial_data4 / 10)) / 512;
+    partial_data5 = partial_data5 * 10;
+    partial_data6 = (int64_t)((uint64_t)uncomp_press * (uint64_t)uncomp_press);
+    partial_data2 = (_bmpCalib.par_p11 * partial_data6) / 65536;
+    partial_data3 = (partial_data2 * uncomp_press) / 128;
+    partial_data4 = (offset / 4) + partial_data1 + partial_data5 + partial_data3;
+    comp_press = (((uint64_t)partial_data4 * 25) / (uint64_t)1099511627776LL);
 
-    partial_data1 = uncomp_press * uncomp_press;
-    partial_data2 = _bmpCalib.p9 + _bmpCalib.p10 * t_lin;
-    partial_data3 = partial_data1 * partial_data2;
-    partial_data4 = partial_data3 + (uncomp_press * uncomp_press * uncomp_press) * _bmpCalib.p11;
-
-    return partial_out1 + partial_out2 + partial_data4;
+    return comp_press; 
 }
 
 void SensorManager::begin() {
@@ -289,52 +304,12 @@ void SensorManager::taskWrapper(void* pvParameters) {
     }
 }
 
-// -----------------------------------------------------------------
-// 物理模擬器：強化推力，確保高度 > 300m
-// -----------------------------------------------------------------
-static portMUX_TYPE simMux = portMUX_INITIALIZER_UNLOCKED;
-static float sim_az = 9.8f;
-static float sim_alt = 0.0f;
-static float sim_vz = 0.0f;
-static uint64_t last_sim_us = 0;
 
-void stepPhysics() {
-    portENTER_CRITICAL(&simMux);
-    uint64_t now = esp_timer_get_time();
-    if (last_sim_us == 0) { last_sim_us = now; portEXIT_CRITICAL(&simMux); return; }
-    float dt = (now - last_sim_us) / 1000000.0f;
-    last_sim_us = now;
-
-    float t = now / 1000000.0f;
-    
-    if (t < 10.0f) {
-        sim_az = 9.8f;   
-    } else if (t < 12.0f) {
-        sim_az = 60.0f;  // 強力啟動 (6G)
-    } else if (t < 20.0f) {
-        sim_az = 40.0f;  // 持續推力 (4G)
-    } else if (t < 45.0f) {
-        sim_az = 0.0f;   // 燃盡，自由拋物線
-    } else {
-        sim_az = 9.8f;   // 下降段
-        if (sim_vz < -15.0f) sim_vz = -15.0f; 
-    }
-
-    sim_vz += (sim_az - 9.8f) * dt;
-    sim_alt += sim_vz * dt;
-    if (sim_alt < 0) { sim_alt = 0; sim_vz = 0; }
-    portEXIT_CRITICAL(&simMux);
-}
-
-float getNoise() { return ((rand() % 100) - 50) / 2000.0f; } 
-// -----------------------------------------------------------------
 
 void SensorManager::icm20948Task() {
     while (1) {
         if (!_icmActive) xSemaphoreTake(permitIcm, portMAX_DELAY);
         if (xSemaphoreTake(_i2cMutex, portMAX_DELAY) == pdTRUE) {
-            stepPhysics();
-            bool read_success = false;
 
             if (_icmInitialized) {
 #ifdef ESP_PLATFORM
@@ -358,21 +333,14 @@ void SensorManager::icm20948Task() {
                     float gz = (((float)gyro_z / 16.4f) * M_PI) / 180.0f;
 
                     // Magnetometer fallback for Kalman
-                    float mx = 1.0f + getNoise(), my = getNoise(), mz = getNoise();
+                    float mx = 1.0f, my = 0.0f, mz = 0.0f;
 
                     if (_kalman) _kalman->updateImu(ax, ay, az, gx, gy, gz, mx, my, mz);
-                    read_success = true;
                 }
 #endif
             }
 
-            if (!read_success) {
-                // Fallback simulation
-                float ax = getNoise(), ay = getNoise(), az = sim_az + getNoise();
-                float gx = getNoise(), gy = getNoise(), gz = getNoise();
-                float mx = 1.0f + getNoise(), my = getNoise(), mz = getNoise();
-                if (_kalman) _kalman->updateImu(ax, ay, az, gx, gy, gz, mx, my, mz);
-            }
+
 
             xSemaphoreGive(_i2cMutex);
         }
@@ -383,27 +351,31 @@ void SensorManager::icm20948Task() {
 void SensorManager::bmp388Task() {
     while (1) {
         if (!_bmpActive) xSemaphoreTake(permitBmp, portMAX_DELAY);
+        // 等待 40ms 讓硬體自行在 Normal Mode 下測量 (25Hz 取樣率 = 40ms 週期)
+        vTaskDelay(pdMS_TO_TICKS(40));
+
         if (xSemaphoreTake(_i2cMutex, portMAX_DELAY) == pdTRUE) {
-            stepPhysics();
-            bool read_success = false;
 
             if (_bmpInitialized) {
 #ifdef ESP_PLATFORM
                 uint8_t raw_data[6] = {0};
-                if (i2cReadRegs(0x76, 0x04, raw_data, 6) == ESP_OK) {
+                // 讀取測量完成的資料
+                if (i2cReadRegs(BMP388_I2C_ADDRESS, 0x04, raw_data, 6) == ESP_OK) {
                     uint32_t raw_press = (uint32_t)raw_data[0] | ((uint32_t)raw_data[1] << 8) | ((uint32_t)raw_data[2] << 16);
                     uint32_t raw_temp  = (uint32_t)raw_data[3] | ((uint32_t)raw_data[4] << 8) | ((uint32_t)raw_data[5] << 16);
 
-                    double t_lin = compensateTemp((double)raw_temp);
-                    double pressure = compensatePress((double)raw_press, t_lin);
+                    int64_t temp_val = compensateTemp(raw_temp);
+                    uint64_t press_val = compensatePress(raw_press);
+
+                    float t_lin = temp_val / 100.0f;
+                    float pressure = press_val / 100.0f; // Pa
 
                     static int bmp_log_cnt = 0;
                     if (bmp_log_cnt++ % 10 == 0) {
-                        ESP_LOGI("Sensors", "BMP388 Read OK - Temp: %.2f C, Press: %.2f Pa", t_lin, pressure);
+                        ESP_LOGI("Sensors", "BMP388 Read OK - Temp: %.2f C, Press: %.2f hPa", t_lin, pressure / 100.0f);
                     }
 
-                    if (_kalman) _kalman->updateBmp((float)pressure, (float)t_lin);
-                    read_success = true;
+                    if (_kalman) _kalman->updateBmp(pressure, t_lin);
                 } else {
                     static int bmp_err_cnt = 0;
                     if (bmp_err_cnt++ % 10 == 0) {
@@ -413,15 +385,10 @@ void SensorManager::bmp388Task() {
 #endif
             }
 
-            if (!read_success) {
-                // Fallback simulation
-                float pressure = 101325.0f * powf(1.0f - sim_alt / 44330.0f, 5.255f);
-                if (_kalman) _kalman->updateBmp(pressure, 25.0f);
-            }
+
 
             xSemaphoreGive(_i2cMutex);
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -434,10 +401,7 @@ void SensorManager::maxM10sTask() {
 
     while (1) {
         if (!_gpsActive) xSemaphoreTake(permitGps, portMAX_DELAY);
-        if (xSemaphoreTake(_i2cMutex, portMAX_DELAY) == pdTRUE) {
-            stepPhysics();
-            xSemaphoreGive(_i2cMutex);
-        }
+
 
 #ifdef ESP_PLATFORM
         int length = uart_read_bytes(GPS_UART_NUM, data, sizeof(data) - 1, pdMS_TO_TICKS(100));
@@ -478,7 +442,7 @@ void SensorManager::maxM10sTask() {
         }
 #else
         // Simulation fallback for native
-        if (_kalman) _kalman->updateGps(25.033, 121.565, sim_alt);
+        if (_kalman) _kalman->updateGps(25.033, 121.565, 0.0);
         vTaskDelay(pdMS_TO_TICKS(200));
 #endif
     }

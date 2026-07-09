@@ -62,7 +62,10 @@ enum LogEventId : uint8_t {
     EVT_HW_ERROR_IMU = 21,
     EVT_HW_ERROR_BMP = 22,
     EVT_BMP_CALIB_COMPLETED = 23,
-    EVT_BMP_CALIB_PARAMS = 24
+    EVT_BMP_CALIB_PARAMS = 24,
+    EVT_ACCEL_CALIB_DONE = 25,
+    EVT_MAG_CALIB_DONE = 26,
+    EVT_TEMP_CALIB_DONE = 27
 };
 
 struct LogData {

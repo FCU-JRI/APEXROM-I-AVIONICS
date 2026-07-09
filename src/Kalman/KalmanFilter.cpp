@@ -4,17 +4,20 @@
 #include "esp_timer.h"
 #include "nvs_flash.h"
 #include "nvs.h"
+#include "esp_log.h"
 
 // 預設雜訊參數
 static const float Q_gyro = 0.001f;
 static const float Q_bias = 0.0001f;
 
-KalmanFilter::KalmanFilter(InterCoreComm* comm) : _comm(comm) {
+KalmanFilter::KalmanFilter(InterCoreComm* comm) : _comm(comm), _health(), _calibratingGyro(false), _calibSamples(0), _madgwickBeta(0.1f), _lastMicros(esp_timer_get_time()), _lat(0), _lon(0), _velN(0), _velE(0), _az_world(0), _groundAltInitialized(false), _groundAlt(0), _groundAltCount(0) {
     _q[0] = 1.0f; _q[1] = 0.0f; _q[2] = 0.0f; _q[3] = 0.0f;
     _bias[0] = 0.0f; _bias[1] = 0.0f; _bias[2] = 0.0f;
-    _calibratingGyro = false;
-    _calibSamples = 0;
     _calibSum[0] = _calibSum[1] = _calibSum[2] = 0.0f;
+    
+    _calibratingAccel = false; _calibAccelSamples = 0;
+    _calibAccelSum[0] = _calibAccelSum[1] = _calibAccelSum[2] = 0.0f;
+    _accelBias[0] = _accelBias[1] = _accelBias[2] = 0.0f;
     memset(_P, 0, sizeof(_P));
     for (int i = 0; i < 7; i++) _P[i][i] = 0.1f;
     _lastMicros = esp_timer_get_time();
@@ -24,6 +27,9 @@ KalmanFilter::KalmanFilter(InterCoreComm* comm) : _comm(comm) {
     _P_alt[0][0] = 10.0f; _P_alt[1][1] = 10.0f; _P_alt[2][2] = 0.01f;
     _az_world = 0;
     loadFromNVM();
+    if (isnan(_x_alt[0]) || isinf(_x_alt[0])) {
+        _x_alt[0] = 0; _x_alt[1] = 0; _x_alt[2] = 0;
+    }
 }
 
 void KalmanFilter::saveToNVM() {
@@ -31,6 +37,7 @@ void KalmanFilter::saveToNVM() {
     if (nvs_open("kf_storage", NVS_READWRITE, &handle) == ESP_OK) {
         nvs_set_blob(handle, "q", _q, sizeof(_q));
         nvs_set_blob(handle, "bias", _bias, sizeof(_bias));
+        nvs_set_blob(handle, "accelBias", _accelBias, sizeof(_accelBias));
         nvs_set_blob(handle, "x_alt", _x_alt, sizeof(_x_alt));
         nvs_set_blob(handle, "lat_lon", &_lat, sizeof(double) * 2);
         nvs_commit(handle); nvs_close(handle);
@@ -43,6 +50,7 @@ void KalmanFilter::loadFromNVM() {
         size_t sz;
         sz = sizeof(_q); nvs_get_blob(handle, "q", _q, &sz);
         sz = sizeof(_bias); nvs_get_blob(handle, "bias", _bias, &sz);
+        sz = sizeof(_accelBias); nvs_get_blob(handle, "accelBias", _accelBias, &sz);
         sz = sizeof(_x_alt); nvs_get_blob(handle, "x_alt", _x_alt, &sz);
         sz = sizeof(double)*2; nvs_get_blob(handle, "lat_lon", &_lat, &sz);
         nvs_close(handle);
@@ -56,25 +64,57 @@ void KalmanFilter::startGyroCalibration() {
     if (_comm) _comm->sendLogEvent(EVT_GYRO_CALIB_STARTED);
 }
 
+void KalmanFilter::startAccelCalibration() {
+    _calibratingAccel = true;
+    _calibAccelSamples = 0;
+    _calibAccelSum[0] = 0.0f; _calibAccelSum[1] = 0.0f; _calibAccelSum[2] = 0.0f;
+}
+
+void KalmanFilter::startBmpCalibration() {
+    _groundAltInitialized = false;
+    _groundAltCount = 0;
+    _groundAlt = 0.0f;
+}
+
 void KalmanFilter::updateImu(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz) {
-    // 若正在校準陀螺儀，收集資料並跳過濾波更新
+    // 陀螺儀校準
     if (_calibratingGyro) {
         _calibSum[0] += gx;
         _calibSum[1] += gy;
         _calibSum[2] += gz;
         _calibSamples++;
-        if (_calibSamples >= 200) {  // 收集約 200 筆樣本
+        if (_calibSamples >= 200) {  // 約 2 秒
             _bias[0] = _calibSum[0] / _calibSamples;
             _bias[1] = _calibSum[1] / _calibSamples;
             _bias[2] = _calibSum[2] / _calibSamples;
             _calibratingGyro = false;
             saveToNVM();
-            if (_comm) {
-                _comm->sendLogEvent(EVT_GYRO_CALIB_DONE, _bias[0], _bias[1], _bias[2]);
-            }
+            if (_comm) _comm->sendLogEvent(EVT_GYRO_CALIB_DONE, _bias[0], _bias[1], _bias[2]);
         }
         return; 
     }
+
+    // 加速度計校準
+    if (_calibratingAccel) {
+        _calibAccelSum[0] += ax;
+        _calibAccelSum[1] += ay;
+        _calibAccelSum[2] += az;
+        _calibAccelSamples++;
+        if (_calibAccelSamples >= 200) {  // 約 2 秒
+            _accelBias[0] = _calibAccelSum[0] / _calibAccelSamples;
+            _accelBias[1] = _calibAccelSum[1] / _calibAccelSamples;
+            _accelBias[2] = (_calibAccelSum[2] / _calibAccelSamples) - 9.80665f; // 假設垂直放置，Z軸重力為 1G
+            _calibratingAccel = false;
+            saveToNVM();
+            if (_comm) _comm->sendLogEvent(EVT_ACCEL_CALIB_DONE, _accelBias[0], _accelBias[1], _accelBias[2]);
+        }
+        return;
+    }
+
+    // 扣除感測器偏差
+    ax -= _accelBias[0];
+    ay -= _accelBias[1];
+    az -= _accelBias[2];
 
     // 扣除陀螺儀零偏
     gx -= _bias[0];
@@ -129,7 +169,7 @@ void KalmanFilter::MadgwickQuaternionUpdate(float ax, float ay, float az, float 
     float norm;
     float s1, s2, s3, s4;
     float qDot1, qDot2, qDot3, qDot4;
-    float beta = 0.1f; // Madgwick 增益參數
+    float beta = _madgwickBeta; // 使用動態 Madgwick 增益參數
 
     // 輔助變數
     float _2q1 = 2.0f * q1;
@@ -219,28 +259,65 @@ void KalmanFilter::predictAltitude(float dt) {
     float accel = _az_world - _x_alt[2];
     _x_alt[0] += _x_alt[1] * dt + 0.5f * accel * dt * dt;
     _x_alt[1] += accel * dt;
-    _P_alt[0][0] += _P_alt[1][1] * dt * dt + 0.001f; 
-    _P_alt[1][1] += _P_alt[2][2] * dt * dt + 0.01f;
-    _P_alt[2][2] += 0.0001f;
+    // 移除不穩定的 3x3 浮點數協方差矩陣預測，改用穩態 Alpha-Beta-Gamma
 }
 
 void KalmanFilter::updateBmp(float pressure, float temperature) {
-    float baroAlt = 44330.0f * (1.0f - powf(pressure / 101325.0f, 0.1903f));
+    float press_hPa = pressure / 100.0f;
+    float absoluteAlt = 44330.0f * (1.0f - powf(press_hPa / 1013.25f, 0.1903f));
+    if (isnan(absoluteAlt)) return;
+    
+    if (!_groundAltInitialized) {
+        _groundAlt += absoluteAlt;
+        _groundAltCount++;
+        if (_groundAltCount >= 50) { // 收集 50 筆資料平均作為發射台高度 (以 25Hz 來說約需 2 秒)
+            _groundAlt /= 50.0f;
+            _groundAltInitialized = true;
+            _x_alt[0] = 0.0f; // 將目前高度狀態重置為 0 位面
+            _x_alt[1] = 0.0f;
+            _x_alt[2] = 0.0f;
+            _comm->sendLogEvent(EVT_BMP_CALIB_COMPLETED);
+        }
+        return; // 在地面高度校正完成前，不進行濾波
+    }
+
+    float baroAlt = absoluteAlt - _groundAlt; // 轉換為相對地面高度 (AGL)
+
     _health.updateBmpHealth(baroAlt, _x_alt[0]);
     if (!_health.isBmpHealthy()) return;
 
-    // 數據健康，先傳送原始數據
-    if (_comm) {
+    static uint8_t bmpSendCounter = 0;
+    bool shouldSend = (bmpSendCounter == 0);
+    bmpSendCounter = (bmpSendCounter + 1) % 5;
+
+    // 數據健康，依頻率傳送原始數據
+    if (_comm && shouldSend) {
         _comm->sendRawBmp(pressure/100.0f, temperature);
     }
 
     float y = baroAlt - _x_alt[0];
-    float S = _P_alt[0][0] + 2.0f;
-    float K[3] = {_P_alt[0][0]/S, _P_alt[1][0]/S, _P_alt[2][0]/S};
-    _x_alt[0] += K[0] * y; _x_alt[1] += K[1] * y; _x_alt[2] += K[2] * y;
-    _P_alt[0][0] -= K[0] * _P_alt[0][0]; _P_alt[1][1] -= K[1] * _P_alt[0][1];
+    
+    // 選項 B 機制：當氣壓計高度與 IMU 積分高度誤差過大時，自動調大 Madgwick beta
+    // 如果誤差大於 2.0 公尺，代表 IMU 姿態 (Pitch/Roll) 可能產生了偏差，導致 Z 軸投影錯誤
+    if (abs(y) > 2.0f) {
+        _madgwickBeta = 0.5f; // 動態提高增益，強制讓加速度計接管姿態修正
+    } else {
+        // 逐漸恢復到平滑模式 (0.1f)
+        _madgwickBeta += (0.1f - _madgwickBeta) * 0.1f; 
+    }
 
-    if (_comm) {
+    // 改用 Alpha-Beta-Gamma 穩態互補濾波 (Steady-State Kalman Filter)
+    // 避免 32-bit float 矩陣運算因為 dt^4 (1e-8) 導致精度流失與數值崩潰 (NaN/0.0)
+    float alpha = 0.4f;      // 高度修正增益 (K0)
+    float beta_gain = 0.1f;  // 速度修正增益 (K1)
+    float gamma = 0.02f;     // 加速度偏差修正增益 (K2)
+    
+    _x_alt[0] += alpha * y; 
+    //printf("%.2f\n", _x_alt[0]);
+    _x_alt[1] += beta_gain * y; 
+    _x_alt[2] -= gamma * y; // 注意 bias 的符號是反向的
+
+    if (_comm && shouldSend) {
         _comm->sendKalmanAltitude(_x_alt[0], _x_alt[1], _az_world);
     }
 }

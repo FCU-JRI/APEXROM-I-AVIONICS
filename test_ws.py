@@ -1,15 +1,18 @@
 import asyncio
 import websockets
+import json
 
 async def test():
-    try:
-        async with websockets.connect("ws://localhost:8765") as ws:
-            print("Connected to WebSocket!")
-            for _ in range(5):
-                msg = await ws.recv()
-                print("Received length:", len(msg), "Data:", msg[:100], "...")
-    except Exception as e:
-        print("WebSocket Client Error:", e)
+    async with websockets.connect("ws://localhost:8765") as websocket:
+        print("Connected!")
+        # Send command to switch to CAL_GYRO (state 2)
+        await websocket.send(json.dumps({"type": "cmd", "action": "setState", "stateId": 2}))
+        
+        for _ in range(15):
+            msg = await websocket.recv()
+            data = json.loads(msg)
+            for d in data["batch"]:
+                if d["type"] == "LOG":
+                    print("LOG:", d["ts"], d["data"]["msg"])
 
-if __name__ == "__main__":
-    asyncio.run(test())
+asyncio.run(test())

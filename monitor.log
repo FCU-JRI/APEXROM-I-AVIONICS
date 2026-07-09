@@ -1,0 +1,439 @@
+成功連接 /dev/cu.usbserial-10 @ 115200 baud.
+WebSocket Server started at ws://localhost:8765
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6380
+ho 0 tail 12 room 4
+load:0x40078000,len:15916
+load:0x40080400,len:3860
+entry 0x40080630
+I (29) boot: ESP-IDF 5.5.0 2nd stage bootloader
+I (29) boot: compile time Jul  7 2026 22:38:14
+I (29) boot: Multicore bootloader
+I (31) boot: chip revision: v3.1
+I (33) boot.esp32: SPI Speed      : 40MHz
+I (37) boot.esp32: SPI Mode       : DIO
+I (41) boot.esp32: SPI Flash Size : 4MB
+I (44) boot: Enabling RNG early entropy source...
+I (49) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (58) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (71) boot:  2 factory          factory app      00 00 00010000 00100000
+I (77) boot: End of partition table
+I (80) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=0cea0h ( 52896) map
+I (106) esp_image: segment 1: paddr=0001cec8 vaddr=3ff80000 size=00020h (    32) load
+I (106) esp_image: segment 2: paddr=0001cef0 vaddr=3ffb0000 size=025d4h (  9684) load
+I (114) esp_image: segment 3: paddr=0001f4cc vaddr=40080000 size=00b4ch (  2892) load
+I (119) esp_image: segment 4: paddr=00020020 vaddr=400d0020 size=22600h (140800) map
+=======================================
+輸入 'T' 發送強制終止指令
+輸入 'exit' 離開程式
+=======================================
+
+Warning: Input is not a terminal (fd=0).
+指令 >
+
+
+
+
+
+
+        I (173) esp_image: segment 5: paddr=00042628 vaddr=40080b4c size=0e614h ( 58900) load
+指令 >
+
+
+
+
+
+
+        I (204) boot: Loaded app from partition at offset 0x10000
+I (204) boot: Disabling RNG early entropy source...
+[0;32mI (214) cpu_start: Multicore app[0m
+[0;32mI (222) cpu_start: Pro cpu start user code[0m
+[0;32mI (223) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (223) app_init: Application information:[0m
+[0;32mI (225) app_init: Project name:     P2026[0m
+[0;32mI (230) app_init: App version:      43353c5-dirty[0m
+[0;32mI (236) app_init: Compile time:     Jul  7 2026 22:37:56[0m
+[0;32mI (242) app_init: ELF file SHA256:  5958b9d69...[0m
+[0;32mI (247) app_init: ESP-IDF:          5.5.0[0m
+[0;32mI (252) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (256) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (261) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (266) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (273) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (279) heap_init: At 3FFB2FA0 len 0002D060 (180 KiB): DRAM[0m
+[0;32mI (286) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (292) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (298) heap_init: At 4008F160 len 00010EA0 (67 KiB): IRAM[0m
+[0;32mI (306) spi_flash: detected chip: generic[0m
+[0;32mI (309) spi_flash: flash io: dio[0m
+[0;33mW (313) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (324) main_task: Started on CPU0[0m
+[0;32mI (334) main_task: Calling app_main()[0m
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 316ms: Acc=(-0.47, -0.20, 9.93) Gyro=(-0.00, -0.00, 0.00) Mag=(0.99, -0.00, 0.01)
+  [QUAT] 316ms: w=-0.999, x=-0.008, y=-0.034, z=-0.015
+  🔹 [IMU] 411ms: Acc=(-0.41, -0.20, 9.90) Gyro=(-0.00, 0.00, 0.00) Mag=(1.02, -0.01, 0.01)
+  [QUAT] 411ms: w=-0.999, x=0.000, y=-0.030, z=-0.013
+  🔹 [IMU] 512ms: Acc=(-0.47, -0.21, 9.96) Gyro=(-0.00, -0.00, 0.00) Mag=(1.00, -0.01, 0.02)
+  [QUAT] 512ms: w=-1.000, x=0.008, y=-0.026, z=-0.008
+  🔹 [IMU] 611ms: Acc=(-0.46, -0.20, 9.96) Gyro=(-0.00, -0.00, -0.00) Mag=(0.99, -0.01, 0.02)
+指令 >
+
+
+
+
+
+
+          [QUAT] 611ms: w=-1.000, x=0.010, y=-0.024, z=-0.005
+  🔹 [IMU] 712ms: Acc=(-0.47, -0.23, 9.95) Gyro=(0.00, 0.00, -0.00) Mag=(0.98, 0.00, -0.00)
+  [QUAT] 712ms: w=-1.000, x=0.010, y=-0.024, z=-0.002
+  🔹 [IMU] 811ms: Acc=(-0.50, -0.16, 9.95) Gyro=(0.00, -0.00, 0.00) Mag=(0.98, 0.02, -0.01)
+  [QUAT] 811ms: w=-1.000, x=0.010, y=-0.025, z=-0.001
+  🔹 [IMU] 912ms: Acc=(-0.51, -0.19, 9.96) Gyro=(0.00, 0.01, 0.00) Mag=(1.02, -0.01, -0.02)
+  [QUAT] 912ms: w=-1.000, x=0.009, y=-0.025, z=-0.001
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 1011ms: Acc=(-0.44, -0.21, 9.93) Gyro=(-0.00, -0.00, 0.00) Mag=(0.98, -0.02, 0.01)
+  [QUAT] 1011ms: w=-1.000, x=0.009, y=-0.024, z=-0.001
+  📝 [LOG] 1110ms: [SM] Current State: 2, Time: 0.00
+  🔹 [IMU] 1112ms: Acc=(-0.52, -0.17, 9.94) Gyro=(-0.00, 0.00, -0.00) Mag=(1.00, 0.02, -0.02)
+  [QUAT] 1112ms: w=-1.000, x=0.010, y=-0.024, z=-0.003
+  🔹 [IMU] 1211ms: Acc=(-0.47, -0.15, 9.93) Gyro=(-0.00, 0.00, 0.00) Mag=(1.00, 0.01, -0.01)
+  [QUAT] 1211ms: w=-1.000, x=0.009, y=-0.025, z=-0.001
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 1312ms: Acc=(-0.46, -0.19, 9.90) Gyro=(-0.00, -0.00, -0.00) Mag=(1.02, -0.02, -0.02)
+  [QUAT] 1312ms: w=-1.000, x=0.009, y=-0.024, z=0.001
+  🔹 [IMU] 1411ms: Acc=(-0.44, -0.20, 9.91) Gyro=(0.01, -0.00, -0.00) Mag=(0.98, -0.02, -0.02)
+  [QUAT] 1411ms: w=-1.000, x=0.010, y=-0.024, z=0.002
+  🔹 [IMU] 1512ms: Acc=(-0.45, -0.20, 9.93) Gyro=(0.00, -0.00, 0.00) Mag=(0.98, 0.00, 0.02)
+  [QUAT] 1512ms: w=-1.000, x=0.011, y=-0.023, z=0.000
+  🔹 [IMU] 1611ms: Acc=(-0.43, -0.23, 9.85) Gyro=(-0.00, -0.00, 0.00) Mag=(0.99, 0.00, -0.01)
+指令 >
+
+
+
+
+
+
+          [QUAT] 1611ms: w=-1.000, x=0.011, y=-0.023, z=-0.001
+  🔹 [IMU] 1712ms: Acc=(-0.52, -0.20, 9.96) Gyro=(-0.00, -0.00, 0.00) Mag=(1.01, 0.00, 0.01)
+  [QUAT] 1712ms: w=-1.000, x=0.010, y=-0.026, z=0.004
+  🔹 [IMU] 1811ms: Acc=(-0.52, -0.18, 9.90) Gyro=(-0.00, 0.00, -0.00) Mag=(0.98, -0.02, 0.00)
+  [QUAT] 1811ms: w=-1.000, x=0.009, y=-0.026, z=-0.001
+  🔹 [IMU] 1912ms: Acc=(-0.44, -0.18, 9.93) Gyro=(0.00, 0.01, -0.00) Mag=(0.98, 0.01, 0.01)
+  [QUAT] 1912ms: w=-1.000, x=0.009, y=-0.023, z=0.001
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 2011ms: Acc=(-0.47, -0.15, 9.89) Gyro=(0.00, 0.00, -0.01) Mag=(1.01, -0.02, 0.02)
+  [QUAT] 2011ms: w=-1.000, x=0.009, y=-0.024, z=0.002
+  🔹 [IMU] 2112ms: Acc=(-0.49, -0.23, 9.91) Gyro=(0.00, -0.00, 0.01) Mag=(0.98, 0.02, -0.02)
+  [QUAT] 2112ms: w=-1.000, x=0.010, y=-0.023, z=-0.000
+  📝 [LOG] 2210ms: [SM] Current State: 2, Time: 0.00
+  🔹 [IMU] 2211ms: Acc=(-0.47, -0.23, 9.90) Gyro=(-0.00, 0.00, 0.00) Mag=(0.99, 0.01, -0.00)
+  [QUAT] 2211ms: w=-1.000, x=0.011, y=-0.023, z=-0.002
+  📝 [LOG] 2310ms: ACTION: BMP388 Calibration Completed
+指令 >
+
+
+
+
+
+
+        [WS→Serial] 📡 切換指令發送：State 2
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 2312ms: Acc=(-0.50, -0.21, 9.92) Gyro=(-0.00, 0.00, -0.00) Mag=(0.98, 0.00, -0.01)
+  ☁️ [BMP] 2350ms: Press=998.41hPa, Temp=30.70°C
+  [QUAT] 2312ms: w=-1.000, x=0.011, y=-0.025, z=-0.002
+  🚀 [KF_ALT] 2350ms: Alt=-6.67m, Vz=-1.66m/s, Az=0.14m/s²
+  🔹 [IMU] 2411ms: Acc=(-0.46, -0.23, 9.95) Gyro=(-0.00, -0.00, 0.00) Mag=(1.00, 0.02, -0.00)
+  [QUAT] 2411ms: w=-1.000, x=0.014, y=-0.022, z=0.010
+  🔹 [IMU] 2512ms: Acc=(-0.52, -0.17, 9.91) Gyro=(0.00, 0.00, -0.00) Mag=(1.02, 0.01, 0.00)
+  [QUAT] 2512ms: w=-1.000, x=0.006, y=-0.028, z=0.005
+  ☁️ [BMP] 2550ms: Press=998.40hPa, Temp=30.70°C
+[WS] Broadcasting to 1 active clients...
+指令 >
+
+
+
+
+
+
+          🚀 [KF_ALT] 2550ms: Alt=-25.05m, Vz=-6.06m/s, Az=0.12m/s²
+  🔹 [IMU] 2611ms: Acc=(-0.50, -0.17, 9.93) Gyro=(0.00, -0.00, 0.00) Mag=(1.02, 0.02, -0.01)
+  [QUAT] 2611ms: w=-1.000, x=0.010, y=-0.025, z=0.004
+  🔹 [IMU] 2712ms: Acc=(-0.45, -0.23, 9.94) Gyro=(0.00, -0.00, 0.00) Mag=(1.00, -0.01, -0.02)
+  [QUAT] 2712ms: w=-1.000, x=0.013, y=-0.018, z=-0.006
+  ☁️ [BMP] 2750ms: Press=998.41hPa, Temp=30.70°C
+  🚀 [KF_ALT] 2750ms: Alt=-31.37m, Vz=-7.30m/s, Az=0.11m/s²
+  🔹 [IMU] 2811ms: Acc=(-0.51, -0.21, 9.91) Gyro=(0.00, -0.00, 0.00) Mag=(0.98, -0.02, 0.02)
+[WS] Broadcasting to 1 active clients...
+指令 >
+
+
+
+
+
+
+          [QUAT] 2811ms: w=-0.999, x=0.011, y=-0.029, z=-0.011
+  🔹 [IMU] 2912ms: Acc=(-0.51, -0.16, 9.96) Gyro=(-0.00, 0.00, -0.00) Mag=(0.98, 0.00, -0.01)
+  [QUAT] 2912ms: w=-1.000, x=0.009, y=-0.027, z=0.001
+  ☁️ [BMP] 2950ms: Press=998.41hPa, Temp=30.70°C
+  🚀 [KF_ALT] 2950ms: Alt=-33.55m, Vz=-7.48m/s, Az=0.10m/s²
+  🔹 [IMU] 3011ms: Acc=(-0.48, -0.17, 9.90) Gyro=(-0.00, -0.00, -0.00) Mag=(1.00, -0.01, -0.01)
+  [QUAT] 3011ms: w=-1.000, x=0.009, y=-0.025, z=-0.002
+  🔹 [IMU] 3112ms: Acc=(-0.45, -0.15, 9.93) Gyro=(-0.01, -0.00, -0.00) Mag=(1.00, -0.02, 0.01)
+[WS] Broadcasting to 1 active clients...
+指令 >
+
+
+
+
+
+
+          [QUAT] 3112ms: w=-1.000, x=0.007, y=-0.022, z=-0.006
+  🚀 [KF_ALT] 3150ms: Alt=-34.24m, Vz=-7.28m/s, Az=0.13m/s²
+  ☁️ [BMP] 3150ms: Press=998.41hPa, Temp=30.70°C
+  🔹 [IMU] 3211ms: Acc=(-0.51, -0.20, 9.87) Gyro=(-0.00, 0.01, -0.00) Mag=(1.01, 0.02, 0.01)
+  [QUAT] 3211ms: w=-1.000, x=0.011, y=-0.026, z=-0.000
+  📝 [LOG] 3240ms: [SM] Current State: 2, Time: 0.00
+  🔹 [IMU] 3312ms: Acc=(-0.51, -0.22, 9.95) Gyro=(-0.00, -0.01, 0.00) Mag=(0.98, -0.02, 0.02)
+  [QUAT] 3312ms: w=-1.000, x=0.010, y=-0.025, z=0.001
+  ☁️ [BMP] 3350ms: Press=998.42hPa, Temp=30.70°C
+  🚀 [KF_ALT] 3350ms: Alt=-34.45m, Vz=-6.98m/s, Az=0.12m/s²
+指令 >
+
+
+
+
+
+
+        [WS] Broadcasting to 1 active clients...
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 3411ms: Acc=(-0.50, -0.18, 9.93) Gyro=(-0.00, -0.00, 0.00) Mag=(0.98, 0.00, -0.01)
+  [QUAT] 3411ms: w=-1.000, x=0.010, y=-0.027, z=0.001
+  🔹 [IMU] 3512ms: Acc=(-0.50, -0.21, 9.96) Gyro=(-0.00, 0.00, 0.00) Mag=(1.00, -0.01, -0.01)
+  [QUAT] 3512ms: w=-1.000, x=0.010, y=-0.026, z=-0.006
+  ☁️ [BMP] 3550ms: Press=998.42hPa, Temp=30.71°C
+  🚀 [KF_ALT] 3550ms: Alt=-34.52m, Vz=-6.66m/s, Az=0.12m/s²
+  🔹 [IMU] 3611ms: Acc=(-0.50, -0.20, 9.87) Gyro=(0.00, 0.00, 0.00) Mag=(0.98, 0.02, 0.01)
+  [QUAT] 3611ms: w=-1.000, x=0.010, y=-0.025, z=0.005
+[WS] Broadcasting to 1 active clients...
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 3712ms: Acc=(-0.52, -0.19, 9.96) Gyro=(0.00, -0.00, -0.00) Mag=(0.98, 0.01, -0.01)
+  ☁️ [BMP] 3750ms: Press=998.41hPa, Temp=30.70°C
+  [QUAT] 3712ms: w=-1.000, x=0.008, y=-0.028, z=0.002
+  🚀 [KF_ALT] 3750ms: Alt=-34.47m, Vz=-6.32m/s, Az=0.07m/s²
+  🔹 [IMU] 3811ms: Acc=(-0.47, -0.17, 9.94) Gyro=(0.00, -0.00, -0.00) Mag=(0.98, 0.00, -0.01)
+  [QUAT] 3811ms: w=-1.000, x=0.008, y=-0.024, z=0.001
+  🔹 [IMU] 3912ms: Acc=(-0.45, -0.26, 9.90) Gyro=(-0.00, 0.00, -0.00) Mag=(1.01, -0.01, 0.01)
+  [QUAT] 3912ms: w=-1.000, x=0.012, y=-0.023, z=-0.004
+  ☁️ [BMP] 3950ms: Press=998.41hPa, Temp=30.70°C
+[WS] Broadcasting to 2 active clients...
+指令 >
+
+
+
+
+
+
+          🚀 [KF_ALT] 3950ms: Alt=-34.43m, Vz=-6.00m/s, Az=0.20m/s²
+  🔹 [IMU] 4011ms: Acc=(-0.50, -0.19, 9.93) Gyro=(-0.01, 0.00, -0.00) Mag=(1.00, -0.01, -0.01)
+  [QUAT] 4011ms: w=-1.000, x=0.010, y=-0.025, z=-0.005
+  🔹 [IMU] 4112ms: Acc=(-0.55, -0.23, 9.96) Gyro=(-0.00, 0.00, 0.00) Mag=(0.99, -0.02, 0.01)
+  [QUAT] 4112ms: w=-1.000, x=0.011, y=-0.027, z=-0.001
+  ☁️ [BMP] 4150ms: Press=998.41hPa, Temp=30.71°C
+  🚀 [KF_ALT] 4150ms: Alt=-34.36m, Vz=-5.69m/s, Az=0.10m/s²
+  🔹 [IMU] 4211ms: Acc=(-0.45, -0.21, 9.90) Gyro=(0.00, 0.00, -0.00) Mag=(0.98, -0.02, 0.01)
+指令 >
+
+
+
+
+
+
+        [WS] Broadcasting to 2 active clients...
+指令 >
+
+
+
+
+
+
+          [QUAT] 4211ms: w=-1.000, x=0.010, y=-0.024, z=0.001
+  🔹 [IMU] 4312ms: Acc=(-0.48, -0.19, 9.91) Gyro=(0.01, -0.01, -0.00) Mag=(1.01, -0.01, -0.02)
+  [QUAT] 4312ms: w=-1.000, x=0.009, y=-0.025, z=0.001
+  📝 [LOG] 4340ms: [SM] Current State: 2, Time: 0.00
+  ☁️ [BMP] 4350ms: Press=998.41hPa, Temp=30.70°C
+  🚀 [KF_ALT] 4350ms: Alt=-34.33m, Vz=-5.40m/s, Az=0.15m/s²
+  🔹 [IMU] 4411ms: Acc=(-0.46, -0.14, 9.96) Gyro=(0.00, 0.00, -0.00) Mag=(0.98, -0.02, -0.00)
+  [QUAT] 4411ms: w=-1.000, x=0.009, y=-0.024, z=-0.001
+[WS] Broadcasting to 2 active clients...
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 4512ms: Acc=(-0.46, -0.17, 9.92) Gyro=(0.00, 0.00, -0.00) Mag=(0.99, -0.01, 0.02)
+  ☁️ [BMP] 4550ms: Press=998.41hPa, Temp=30.71°C
+  [QUAT] 4512ms: w=-1.000, x=0.010, y=-0.024, z=-0.000
+  🚀 [KF_ALT] 4550ms: Alt=-34.29m, Vz=-5.12m/s, Az=0.20m/s²
+  🔹 [IMU] 4611ms: Acc=(-0.45, -0.17, 9.92) Gyro=(-0.00, 0.00, 0.00) Mag=(0.99, 0.00, -0.01)
+  [QUAT] 4611ms: w=-1.000, x=0.009, y=-0.023, z=0.003
+  🔹 [IMU] 4712ms: Acc=(-0.46, -0.19, 9.91) Gyro=(-0.00, -0.00, -0.00) Mag=(1.01, 0.02, -0.00)
+  [QUAT] 4712ms: w=-1.000, x=0.009, y=-0.023, z=0.007
+  ☁️ [BMP] 4750ms: Press=998.41hPa, Temp=30.71°C
+[WS] Broadcasting to 2 active clients...
+指令 >
+
+
+
+
+
+
+          🚀 [KF_ALT] 4750ms: Alt=-34.23m, Vz=-4.85m/s, Az=0.13m/s²
+  🔹 [IMU] 4811ms: Acc=(-0.49, -0.19, 9.97) Gyro=(-0.01, 0.00, -0.00) Mag=(0.98, 0.02, -0.01)
+  [QUAT] 4811ms: w=-1.000, x=0.010, y=-0.025, z=0.005
+  🔹 [IMU] 4912ms: Acc=(-0.52, -0.26, 9.97) Gyro=(-0.00, 0.00, 0.00) Mag=(1.02, 0.01, -0.01)
+  [QUAT] 4912ms: w=-1.000, x=0.012, y=-0.026, z=0.005
+  ☁️ [BMP] 4950ms: Press=998.42hPa, Temp=30.71°C
+  🚀 [KF_ALT] 4950ms: Alt=-34.20m, Vz=-4.59m/s, Az=0.12m/s²
+  🔹 [IMU] 5011ms: Acc=(-0.54, -0.20, 9.99) Gyro=(-0.00, -0.00, -0.00) Mag=(0.98, 0.00, 0.02)
+[WS] Broadcasting to 3 active clients...
+指令 >
+
+
+
+
+
+
+          [QUAT] 5011ms: w=-1.000, x=0.011, y=-0.026, z=0.004
+  🔹 [IMU] 5112ms: Acc=(-0.48, -0.25, 9.94) Gyro=(-0.01, 0.00, 0.00) Mag=(1.02, -0.02, 0.02)
+  [QUAT] 5112ms: w=-1.000, x=0.010, y=-0.025, z=-0.002
+  ☁️ [BMP] 5150ms: Press=998.41hPa, Temp=30.70°C
+  🚀 [KF_ALT] 5150ms: Alt=-34.16m, Vz=-4.35m/s, Az=0.16m/s²
+  🔹 [IMU] 5211ms: Acc=(-0.46, -0.18, 9.92) Gyro=(-0.01, -0.01, 0.00) Mag=(1.01, 0.00, -0.02)
+  [QUAT] 5211ms: w=-1.000, x=0.009, y=-0.023, z=-0.001
+  🔹 [IMU] 5312ms: Acc=(-0.47, -0.25, 9.89) Gyro=(-0.01, 0.01, 0.00) Mag=(1.00, 0.02, -0.01)
+指令 >
+
+
+
+
+
+
+        [WS] Broadcasting to 3 active clients...
+指令 >
+
+
+
+
+
+
+          [QUAT] 5312ms: w=-1.000, x=0.012, y=-0.026, z=0.001
+  🚀 [KF_ALT] 5350ms: Alt=-34.10m, Vz=-4.11m/s, Az=0.30m/s²
+  ☁️ [BMP] 5350ms: Press=998.41hPa, Temp=30.71°C
+  🔹 [IMU] 5411ms: Acc=(-0.51, -0.22, 9.93) Gyro=(0.00, -0.03, -0.00) Mag=(0.98, -0.01, 0.00)
+  [QUAT] 5411ms: w=-1.000, x=0.011, y=-0.026, z=0.000
+  📝 [LOG] 5440ms: [SM] Current State: 2, Time: 0.00
+  🔹 [IMU] 5512ms: Acc=(-0.54, -0.26, 9.74) Gyro=(-0.00, 0.01, 0.00) Mag=(1.01, 0.01, 0.01)
+  [QUAT] 5512ms: w=-1.000, x=0.011, y=-0.027, z=-0.002
+  ☁️ [BMP] 5550ms: Press=998.41hPa, Temp=30.71°C
+  🚀 [KF_ALT] 5550ms: Alt=-34.06m, Vz=-3.89m/s, Az=0.22m/s²
+[WS] Broadcasting to 3 active clients...
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 5611ms: Acc=(-0.57, -0.23, 10.01) Gyro=(-0.00, 0.02, 0.01) Mag=(0.98, 0.01, 0.01)
+  [QUAT] 5611ms: w=-1.000, x=0.011, y=-0.028, z=0.001
+  🔹 [IMU] 5712ms: Acc=(-0.52, -0.24, 10.02) Gyro=(-0.00, 0.00, -0.00) Mag=(1.00, -0.01, 0.01)
+  [QUAT] 5712ms: w=-1.000, x=0.012, y=-0.026, z=-0.002
+  ☁️ [BMP] 5750ms: Press=998.40hPa, Temp=30.71°C
+  🚀 [KF_ALT] 5750ms: Alt=-33.99m, Vz=-3.67m/s, Az=0.02m/s²
+  🔹 [IMU] 5811ms: Acc=(-0.57, -0.24, 9.68) Gyro=(-0.00, 0.01, -0.00) Mag=(1.00, -0.02, -0.01)
+  [QUAT] 5811ms: w=-1.000, x=0.011, y=-0.027, z=-0.006
+[WS] Broadcasting to 3 active clients...
+指令 >
+
+
+
+
+
+
+          🔹 [IMU] 5912ms: Acc=(-0.51, -0.23, 9.91) Gyro=(-0.01, 0.01, -0.00) Mag=(1.00, 0.00, -0.02)
+  ☁️ [BMP] 5950ms: Press=998.40hPa, Temp=30.70°C
+  [QUAT] 5912ms: w=-1.000, x=0.012, y=-0.026, z=0.000
+  🚀 [KF_ALT] 5950ms: Alt=-33.93m, Vz=-3.46m/s, Az=0.20m/s²
+  🔹 [IMU] 6011ms: Acc=(-0.45, -0.23, 9.96) Gyro=(-0.00, -0.01, 0.00) Mag=(0.98, -0.00, -0.01)
+  [QUAT] 6011ms: w=-1.000, x=0.011, y=-0.024, z=0.003
+  🔹 [IMU] 6112ms: Acc=(-0.52, -0.27, 9.97) Gyro=(0.01, -0.00, -0.00) Mag=(1.01, 0.00, -0.01)
+  [QUAT] 6112ms: w=-1.000, x=0.011, y=-0.027, z=-0.000
+  ☁️ [BMP] 6150ms: Press=998.41hPa, Temp=30.71°C
+指令 >
+
+
+
+
+
+
+        [WS] Broadcasting to 3 active clients...
+指令 >
+
+
+
+
+
+
+        

@@ -20,7 +20,7 @@ extern "C" void app_main(void) {
     }
     ESP_ERROR_CHECK(ret);
 
-    printf("=== Rocket Avionics System Starting ===\n");
+    esp_log_level_set("*", ESP_LOG_NONE);
 
     // 2. 建立通訊與濾波物件 (基礎層)
     static InterCoreComm* comm = new InterCoreComm();
@@ -49,8 +49,6 @@ extern "C" void app_main(void) {
     sensors->enableIcm();
     sensors->enableBmp();
     sensors->enableGps();
-
-    printf("=== All Systems Operational ===\n");
     
     return;
 }

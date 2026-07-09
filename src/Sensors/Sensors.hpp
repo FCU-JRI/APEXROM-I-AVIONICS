@@ -55,8 +55,21 @@ private:
     SemaphoreHandle_t _i2cMutex;
 
     struct BmpCalibrationData {
-        double t1, t2, t3;
-        double p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
+        uint16_t par_t1;
+        uint16_t par_t2;
+        int8_t par_t3;
+        int16_t par_p1;
+        int16_t par_p2;
+        int8_t par_p3;
+        int8_t par_p4;
+        uint16_t par_p5;
+        uint16_t par_p6;
+        int8_t par_p7;
+        int8_t par_p8;
+        int16_t par_p9;
+        int8_t par_p10;
+        int8_t par_p11;
+        int64_t t_lin;
     } _bmpCalib;
 
     bool _icmInitialized = false;
@@ -68,8 +81,8 @@ private:
 #endif
     bool initIcm20948();
     bool initBmp388();
-    double compensateTemp(double uncomp_temp);
-    double compensatePress(double uncomp_press, double t_lin);
+    int64_t compensateTemp(uint32_t uncomp_temp);
+    uint64_t compensatePress(uint32_t uncomp_press);
 };
 
 #endif

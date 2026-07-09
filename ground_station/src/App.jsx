@@ -76,13 +76,23 @@ function App() {
     // WebSocket — 永久連線，僅初始化一次
     useEffect(() => {
         let ws, timer;
+        let isMounted = true;
         const connect = () => {
-            ws = new WebSocket("ws://localhost:8765");
+            if (!isMounted) return;
+            const host = window.location.hostname || "localhost";
+            ws = new WebSocket(`ws://${host}:8765`);
             wsRef.current = ws;
-            ws.onopen  = () => { setWsConnected(true);  addCmdLog("✅ 已連線至 Monitor WebSocket"); };
-            ws.onclose = () => { setWsConnected(false); addCmdLog("❌ WebSocket 斷線，3 秒後重連…"); timer = setTimeout(connect, 3000); };
+            ws.onopen  = () => { if (isMounted) { setWsConnected(true);  addCmdLog("✅ 已連線至 Monitor WebSocket"); } };
+            ws.onclose = () => { 
+                if (isMounted) { 
+                    setWsConnected(false); 
+                    addCmdLog("❌ WebSocket 斷線，3 秒後重連…"); 
+                    timer = setTimeout(connect, 3000); 
+                }
+            };
             ws.onerror = () => {};
             ws.onmessage = (e) => {
+                if (!isMounted) return;
                 try {
                     const d = JSON.parse(e.data);
                     if (d.batch) {
@@ -111,7 +121,14 @@ function App() {
             };
         };
         connect();
-        return () => { clearTimeout(timer); if (ws) ws.close(); };
+        return () => { 
+            isMounted = false;
+            clearTimeout(timer); 
+            if (ws) {
+                ws.onclose = null; // IMPORTANT: Prevent onclose from firing and scheduling a reconnect!
+                ws.close(); 
+            }
+        };
     }, [addCmdLog]);
 
     useEffect(() => {
@@ -213,10 +230,10 @@ function App() {
                 {/* 左側：遙測 + 3D + GPS */}
                 <div className="w-1/3 flex flex-col gap-3">
                     <div className="grid grid-cols-2 gap-2">
-                        <TeleCard label="Alt"     val={alt.toFixed(1)} unit="m"   />
-                        <TeleCard label="Vel"     val={vel.toFixed(0)} unit="m/s" />
-                        <TeleCard label="Accel"   val={acc.toFixed(2)} unit="g"   />
-                        <TeleCard label="Packets" val={view?.pkt ?? 0} unit="idx" />
+                        <TeleCard label="Alt"     val={alt.toFixed(3)} unit="m"   />
+                        <TeleCard label="Vel"     val={vel.toFixed(3)} unit="m/s" />
+                        <TeleCard label="Accel"   val={acc.toFixed(3)} unit="g"   />
+                        <TeleCard label="Packets" val={Number(view?.pkt ?? 0).toFixed(3)} unit="idx" />
                     </div>
                     <div className="glass-panel flex-1 flex flex-col items-center justify-center relative min-h-[140px]">
                         <div className="text-sm text-cyan-400 font-bold uppercase absolute top-2 left-2 flex flex-col gap-0.5 z-10">

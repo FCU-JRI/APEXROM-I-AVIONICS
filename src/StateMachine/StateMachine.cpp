@@ -49,6 +49,9 @@ void StateMachine::stateMachineTask() {
         }
 
         if (xQueueReceive(stateQueue, &event, pdMS_TO_TICKS(100)) == pdTRUE) {
+            if (event.state == _state) {
+                continue; // Ignore redundant state transitions
+            }
             if (switchValid(event.state)) {
                 transitionTo(event.state);
             } else {
@@ -84,9 +87,9 @@ bool StateMachine::switchValid(STATENUM newState) {
         float currentTime = esp_timer_get_time() / 1000000.0f;
         float diff = currentTime - _startTime;
         
-        // 額外的安全性檢查：確保不會過早進入回收狀態
-        if (newState == FLIGHT_P8_9_APOGEE && diff < 10.91f) return false;
-        if (newState == FLIGHT_P11_MAIN_CHUTE_DEPLOY && diff < 227.17f) return false;
+        // 額外的安全性檢查：確保不會過早進入回收狀態 (目前為了桌面測試暫時關閉)
+        // if (newState == FLIGHT_P8_9_APOGEE && diff < 10.91f) return false;
+        // if (newState == FLIGHT_P11_MAIN_CHUTE_DEPLOY && diff < 227.17f) return false;
     }
 
     if (_state >= FLIGHT_P5_IGNITION && _state < FLIGHT_P12_TERMINATE) {
@@ -124,6 +127,22 @@ void StateMachine::transitionTo(STATENUM newState) {
             if (_sensors && _sensors->getKalmanFilter()) {
                 _sensors->getKalmanFilter()->startGyroCalibration();
             }
+            break;
+        case CAL_BARO:
+            if (_sensors && _sensors->getKalmanFilter()) {
+                _sensors->getKalmanFilter()->startBmpCalibration();
+            }
+            break;
+        case CAL_ACCEL:
+            if (_sensors && _sensors->getKalmanFilter()) {
+                _sensors->getKalmanFilter()->startAccelCalibration();
+            }
+            break;
+        case CAL_MAG:
+            _comm->sendLogEvent(EVT_MAG_CALIB_DONE);
+            break;
+        case CAL_TEMP:
+            _comm->sendLogEvent(EVT_TEMP_CALIB_DONE);
             break;
         case FLIGHT_P8_9_APOGEE:
             _recovery->deployDrogue();

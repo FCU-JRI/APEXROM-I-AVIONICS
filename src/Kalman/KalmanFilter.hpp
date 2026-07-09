@@ -17,6 +17,8 @@ public:
     void updateGps(double lat, double lon, float alt);
     
     void startGyroCalibration();
+    void startBmpCalibration();
+    void startAccelCalibration();
 
     // 取得目前濾波結果
     void getQuaternion(float q[4]);
@@ -36,11 +38,18 @@ private:
     float _calibSum[3];
     float _P[7][7];        // 狀態協方差矩陣
     
+    // 加速度計校正
+    bool _calibratingAccel;
+    int _calibAccelSamples;
+    float _calibAccelSum[3];
+    float _accelBias[3];
+    
     // 噪聲參數
     const float Q_gyro = 0.001f;
     const float Q_bias = 0.00001f;
     const float R_accel = 0.01f;
     const float R_mag = 0.1f; // 磁力計雜訊
+    float _madgwickBeta = 0.1f; // 動態 Madgwick 增益
 
     uint32_t _lastMicros;
 
@@ -51,6 +60,10 @@ private:
     float _x_alt[3]; 
     float _P_alt[3][3];
     float _az_world;
+
+    bool _groundAltInitialized;
+    float _groundAlt;
+    int _groundAltCount;
 
     // 內部方法
     void predictAltitude(float dt);

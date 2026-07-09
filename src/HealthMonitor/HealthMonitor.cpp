@@ -35,7 +35,13 @@ bool HealthMonitor::checkPhysicalLimits(float value, float min, float max, float
     if (frozen) status.frozenCount++;
     else status.frozenCount = 0;
 
-    bool currentSampleOk = !outOfBounds && (status.frozenCount < FROZEN_LIMIT) && !rateExceeded;
+    // For BMP388, it can be extremely stable on a desk, so frozen limit is too strict.
+    // We only apply FROZEN_LIMIT to IMU (rateExceeded is also more relevant to IMU).
+    // We only apply FROZEN_LIMIT to IMU (rateExceeded is also more relevant to IMU).
+    // Disable frozenCount for BMP388 because integer math can output identical readings.
+    uint16_t actualFrozenLimit = (maxRate > 400.0f) ? FROZEN_LIMIT : 10000; 
+
+    bool currentSampleOk = !outOfBounds && (status.frozenCount < actualFrozenLimit) && !rateExceeded;
 
     if (currentSampleOk) {
         status.consecutiveNormalCount++;

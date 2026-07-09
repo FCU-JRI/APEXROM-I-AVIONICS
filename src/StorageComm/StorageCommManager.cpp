@@ -75,9 +75,12 @@ void StorageCommManager::dispatchCommand(const char* cmd) {
     if (isNum) {
         int stateNum = atoi(cmd);
         if (stateNum >= 0 && stateNum <= 17) {
-            ESP_LOGW(TAG, "Command: Transition to State %d", stateNum);
-            StateMachine::StateEvent evt = {(STATENUM)stateNum, xTaskGetTickCount()};
-            xQueueSend(_smQueue, &evt, 0);
+            // Check if we are already in this state, if so just log and ignore to prevent duplicates
+            if (_smQueue) {
+                ESP_LOGW(TAG, "Command: Transition to State %d", stateNum);
+                StateMachine::StateEvent evt = {(STATENUM)stateNum, xTaskGetTickCount()};
+                xQueueSend(_smQueue, &evt, 0);
+            }
         } else {
             ESP_LOGE(TAG, "Command: Invalid state number %d (valid: 0-17)", stateNum);
         }

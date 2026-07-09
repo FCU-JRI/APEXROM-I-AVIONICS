@@ -83,12 +83,13 @@ async def ws_handler(websocket):
 async def broadcast_ws(batch_data):
     if ws_clients:
         msg = json.dumps({"batch": batch_data, "status": "0-0", "pkt": len(batch_data)})
+        print(f"[WS] Broadcasting to {len(ws_clients)} active clients...")
         await asyncio.gather(*[client.send(msg) for client in ws_clients])
 
 async def _ws_main():
     global ws_loop
     ws_loop = asyncio.get_running_loop()
-    async with websockets.serve(ws_handler, "localhost", 8765):
+    async with websockets.serve(ws_handler, "0.0.0.0", 8765):
         await asyncio.Future()  # 永久等待，直到 thread 結束
 
 def ws_server_thread():
@@ -119,7 +120,10 @@ def build_event_string(event_id, p1, p2, p3):
         21: "HW ERROR: ICM20948 (IMU) Init Failed",
         22: "HW ERROR: BMP388 (Barometer) Init Failed",
         23: "ACTION: BMP388 Calibration Completed",
-        24: f"ACTION: BMP388 Calib Params (T1={p1:.2f}, P1={p2:.2f})"
+        24: f"ACTION: BMP388 Calib Params (T1={p1:.2f}, P1={p2:.2f})",
+        25: "ACTION: Accelerometer Calibration Done",
+        26: "ACTION: Magnetometer Calibration Done",
+        27: "ACTION: Temperature Calibration Done"
     }
     return EVENT_MAP.get(event_id, f"Unknown Event {event_id} ({p1:.2f}, {p2:.2f}, {p3:.2f})")
 
