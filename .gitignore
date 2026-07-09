@@ -8,3 +8,9 @@
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+#Vite
+ground_station/
+
+#python files
+py_files/
